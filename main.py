@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, make_response
 app = Flask(__name__)
 app.debug = False
 
@@ -8,11 +8,14 @@ if HOME:
     HOME = HOME + "/"
 
 @app.route("/")
-def hello():
-    try:
-        return open(HOME + "blag/static/home.html", "r").read()
-    except Exception, e:
-        return str(e)
+def home():
+    return open(HOME + "blag/static/home.html", "r").read()
+
+@app.route("/static/resume.pdf")
+def get_resume():
+    response = make_response(open(HOME + "blag/static/resume.pdf", "r").read())
+    response.headers["Content-Type"] = "application/pdf"
+    return response
 
 if __name__ == "__main__":
     app.run()
