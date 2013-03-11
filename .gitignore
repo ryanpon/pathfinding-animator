@@ -36,3 +36,5 @@ nosetests.xml
 
 *.pem
 *.log
+
+*.DS_store
