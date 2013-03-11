@@ -73,11 +73,11 @@ nav ul li {
     }
 
         nav ul li a:hover {
-            color: #fff;
+            color: #7c7273;
         }
 
         nav ul li.selected a {
-            color: #fff;
+            color: #7c7273;
         }
 
 /*------------------------------
@@ -100,15 +100,16 @@ nav ul li {
     }
 
 #content hr {
-    border: 10;
+    border: 1;
     width: 100%;
+    color: #999999;
 }
 
 
 .blogPost header p, .blogPost header p a {
         font-size: 14px;
         font-style: italic;
-        color: #777;
+        color: #999999;
     }
     
         .blogPost header p a:hover {
@@ -133,20 +134,12 @@ nav ul li {
 
 
 #intro {
-    margin-top: 80px;
+    margin-top: 0px;
+    margin-bottom: -7px;
     padding: 30px;
     border-radius: 22px;
     background: #1589FF url("fedora.png") repeat-x;
     background-size: 100%;
-    /* Background-size not implemented yet */
-    -webkit-background-size: 100%;
-    -o-background-size: 100%;
-    -khtml-background-size: 100%;
-  
-    /* Border-radius not implemented yet */  
-    -moz-border-radius: 22px;  
-    -webkit-border-radius: 22px; 
-
     /* Images! */
     background: #1589FF url("fedora.png") top left (287px 100%) repeat-x,  
             url("fedora.png") top righrtight (653px 100%) no-repeat;  
@@ -203,13 +196,13 @@ footer {
     position: absolute;
     left: 0;
     width: 100%;
-    background: #222222;
+    background: #161616;
 }
 
     footer div {
         display: table;
         margin: 0 auto;
-        padding: 44px 0;
+        padding: 25px 0;
         width: 940px;
         color: #777;
     }
@@ -222,13 +215,9 @@ footer {
         footer div #about, footer div #blogroll {
             padding-right: 20px;
         }
-        
-    footer h3 {
-        color: #FFF;
-    }
 
     footer p {
-        color: #FFF;
+        color: #999999;
     }
     
     footer a {
@@ -250,3 +239,9 @@ footer {
             display: block;
         }
 
+    footer h2 {  
+    padding: 0;  
+    font-weight: lighter;
+    color: #999999;
+    width: 336px;
+    }  
