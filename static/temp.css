@@ -1,110 +1,19 @@
-/* Makeshift CSS reset */
-{
-    margin: 0;
-    padding: 0;
-}
-
 /* Tell the browser to render HTML 5 elements as block */
 header, footer, aside, nav, article {
     display: block;
 }
 
-body {
-    margin: auto auto;
-    width: 940px;
-    font: 13px/22px Helvetica, Arial, sans-serif;
-    background: #e5e5e5;
+#content section {
+    margin-left: 30px;
 }
 
-h1 {
-    font-size: 28px;
-    line-height: 44px;
-    padding: 0px 0;
-    font-weight: normal;
-    color: black;
+#content h3 {
+    margin-bottom: 0px;
 }
 
-h2 {
-    font-size: 28px;
-    line-height: 44px;
-    padding: 22px 0;
-    color: black;
+#content p {
+    margin-left: 10px;
 }
-
-h3 {
-    font-size: 24px;
-    line-height: 0px;
-    font-weight: lighter;
-    padding: 0px 0;
-}
-
-p {
-    padding: 0 10px;
-    color: black;
-}
-
-nav {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    background: #2F2F2F;
-    box-shadow: 1px 1px 4px #777;
-}
-
-nav ul {  
-    margin: 0 auto;  
-    width: 940px;  
-    list-style: none;  
-} 
-
-nav ul li {
-    float: left;
-}
-
-    nav ul li a {
-        display: block;
-        margin-right: 20px;
-        width: 200px;
-        font-size: 14px;
-        line-height: 44px;
-        text-align: center;
-        text-decoration: none;
-        color: #e5e5e5;
-    }
-
-        nav ul li a:hover {
-            color: #7c7273;
-        }
-
-        nav ul li.selected a {
-            color: #7c7273;
-        }
-
-/*------------------------------
-=CONTENT AREA AND SIDEBAR LAYOUT
-------------------------------*/
-
-#content {
-    display: table;
-}
-
-    #mainContent {
-        display: table-cell;
-        width: 620px;
-        padding-right: 22px;
-    }
-    
-    aside {
-        display: table-cell;
-        width: 300px;
-    }
-
-#content hr {
-    border: 1;
-    width: 100%;
-    color: #999999;
-}
-
 
 .blogPost header p, .blogPost header p a {
         font-size: 14px;
@@ -116,16 +25,6 @@ nav ul li {
             text-decoration: none;
             color: #000;
         }
-
-.blogPost div {
-    /* Column-count not implemented yet */
-    -moz-column-count: 2;
-    -webkit-column-count: 2;
-    
-    /* Column-gap not implemented yet */
-    -moz-column-gap: 22px;
-    -webkit-column-gap: 22px;
-}
     
 .blogPost img {
     margin: 22px 0;
@@ -134,15 +33,14 @@ nav ul li {
 
 
 #intro {
-    margin-top: 0px;
-    margin-bottom: -7px;
+    margin: 0px 20px 20px 20px;    
     padding: 30px;
     border-radius: 22px;
     background: #1589FF url("fedora.png") repeat-x;
     background-size: 100%;
     /* Images! */
-    background: #1589FF url("fedora.png") top left (287px 100%) repeat-x,  
-            url("fedora.png") top righrtight (653px 100%) no-repeat;  
+    background: #1589FF url("fedora.png") top left (auto 100%) repeat-x,  
+            url("fedora.png") top right right (auto 100%) no-repeat;  
             box-shadow: 3px 3px 7px #777;
     
 }
@@ -161,33 +59,6 @@ nav ul li {
     font-weight: lighter;
     width: 336px; 
 }
-
-/*------------------------------
-=SIDEBAR
-------------------------------*/
-aside section {
-    margin: 40px 40px 0 22px;
-    padding: 0px 22px;
-    border-radius: 11px;
-}
-
-    aside section ul {
-        margin: 0 0 0 22px;
-        list-style: none;
-    }
-    
-        aside section ul li a {
-            display: block;
-            text-decoration: none;
-            color: #000;
-        }
-        
-            aside section ul li a:hover {
-                text-decoration: underline;
-            }
-
-
-
 
 /*------------------------------
 =FOOTER
