@@ -9,7 +9,7 @@ if HOME:
 
 @app.route("/")
 def home():
-    return open(HOME + "blag/static/home.html", "r").read()
+    return open(HOME + "blag/static/index.html", "r").read()
 
 @app.route("/static/resume.pdf")
 def get_resume():
