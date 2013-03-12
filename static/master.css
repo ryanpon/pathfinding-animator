@@ -12,12 +12,27 @@ span {
     white-space: nowrap;
 }
 
+#content li {
+    margin-left: 10px;
+}
+
+#content h4 {
+    font-size: 16px;
+    margin: 0;
+    margin-left: -14px;
+}
+
+#content h3 {
+    margin: 18px -10px auto auto;
+    line-height: 30px;
+}
+
 #content section {
     margin-left: 30px;
 }
 
 #content p {
-    margin-left: 10px;
+    margin-left: 0px;
 }
 
 .blogPost header p, .blogPost header p a {

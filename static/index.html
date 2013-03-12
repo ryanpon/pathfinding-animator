@@ -67,16 +67,22 @@
         <article class="blogPost">
             <header>
               <!-- Span to stop awkward lines breaks. -->
-              <h3>Software Engineer at <span>Shortcircuit Inc.</span> <span>(YC W2013)</span></h3>
+              <h3>Software Engineer at <span>ShortCircuit Inc.</span> <span>(YC W2013)</span></h3>
               <p>September 2012 - present</p>
             </header>
-            <p>-Primarily self-directed.<br>
-              -Worked on the SF transit app Rover(roversf.com), which serves thousands of users daily.<br>
-              -Designed and implemented majority of the current production backend from ground up.<br>
-              -Wrote business logic for handling realtime data.<br>
-              -Implemented scalable routing algorithm for mass transit. Replaced existing algorithm with increase in<br> performance of up to 102 and signifcant optimizations in memory usage. <br>
-              -Managed backend production releases to EC2 and Heroku.<br>
-            </p>
+            <p>At ShortCircuit, I worked on the real-time mass transit directions app <a href="m.roversf.com">Rover</a>. I was primarily responsible for the backend, which was mainly Python with Flask. Here are a few of the things I created for Rover:</p>
+            <ul>
+              <h4>Algorithm for routing via mass transit</h4>
+              <p>The algorithm was implemented based on a recently published research paper. It was a replacement for our older routing algorithm, with a performance increase of up to two orders of magnitude and significant savings in memory. This prevented a backend rewrite from Python to a performance language.</p>
+
+              <h4>Walking directions for Open Street Maps</h4>
+              <p>Shortest path algorithm which provided a visual guide for our users and distance calculations for the transit routing algorithm. Due to the size of OSM data, I created a fast, dynamic loading scheme that prevented having to keep all the data in memory at once.</p>
+
+              <h4>Other Responsibilities</h4>
+              <li>Designed and implemented majority of the current production backend from ground up.</li>
+              <li>Business logic for handling real-time data.</li>
+              <li>Backend production releases to EC2 and Heroku.</li>
+            </ul>
           </article>
       </section>
       <hr>
