@@ -1,11 +1,15 @@
 /* Tell the browser to render HTML 5 elements as block */
-header, footer, aside, nav, article {
+/*header, footer, aside, nav, article {
     display: block;
-}
+}*/
 
 #wrapper div {
     margin: 0 auto;
     max-width: 1024px;
+}
+
+.hiddenDiv { 
+
 }
 
 span {
