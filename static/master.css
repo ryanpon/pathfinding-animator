@@ -60,7 +60,6 @@ span {
     padding: 0 0 4px 0;
     font-weight: normal;
     color: white;
-    /*width: 336px;*/
 }  
   
 #intro p {
@@ -75,6 +74,8 @@ span {
 ------------------------------*/
 footer {
     background: #161616;
+    padding-top: 12px;
+    padding-bottom: 50px;
 }
 
 footer div {

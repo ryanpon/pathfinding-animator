@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>About Ryan</title>
+    <title>Ryan Pon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -32,9 +32,9 @@
           <a class="brand" href="#">About Me</a>
           <div class="nav">
             <ul class="nav">
-              <li><a href="#">Contact</a></li>           
-              <li><a href="https://github.com/RPon00">GitHub</a></li>
               <li><a href="static/resume.pdf">Resume</a></li>
+              <li><a href="https://github.com/RPon00">GitHub</a></li>
+              <li><a href="#">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -50,10 +50,7 @@
             <header>
               <h2>This page is a little about me and what I've done.</h2>
             </header>
-            <p>I'm currently a backend software engineer, working mostly in Python. 
-              Hai! I guess this stuff probably wraps around or something, but
-              it would be good to know that.</p>
-            
+            <p>I graduated from UC San Diego in 2012 and am interested in cool algorithms, data structures, and their implementations, and in the way they come together to form systems.</p>
           </div>
           <div class="span7"><!-- OTHER STUFF --></div>
         </div>
@@ -65,24 +62,22 @@
     <div id="mainContent" class="span8">
       <section>
         <article class="blogPost">
-            <header>
-              <!-- Span to stop awkward lines breaks. -->
-              <h3>Software Engineer at <span>ShortCircuit Inc.</span> <span>(YC W2013)</span></h3>
-              <p>September 2012 - present</p>
-            </header>
-            <p>At ShortCircuit, I worked on the real-time mass transit directions app <a href="m.roversf.com">Rover</a>. I was primarily responsible for the backend, which was mainly Python with Flask. Here are a few of the things I created for Rover:</p>
-            <ul>
-              <h4>Algorithm for routing via mass transit</h4>
-              <p>The algorithm was implemented based on a recently published research paper. It was a replacement for our older routing algorithm, with a performance increase of up to two orders of magnitude and significant savings in memory. This prevented a backend rewrite from Python to a performance language.</p>
+          <header>
+            <!-- Span to stop awkward lines breaks. -->
+            <h3>Software Engineer at <span>ShortCircuit Inc.</span> <span>(YC W2013)</span></h3>
+            <p>September 2012 - present</p>
+          </header>
+          <p>At ShortCircuit, I worked on the real-time mass transit directions app <a href="m.roversf.com">Rover</a>. <span>I was</span> primarily responsible for the backend, which was mainly Python with Flask. Here are a few of the things <span>I created</span> for Rover:</p>
+          <ul>
+            <h4>Real-time mass transit routing algorithm</h4>
+            <p>The algorithm was implemented based on a recently published research paper. It was a replacement for our older routing algorithm, with a performance increase of up to two orders of magnitude and significant savings in memory. This prevented a backend rewrite from Python to a performance language.</p>
 
-              <h4>Walking directions for Open Street Maps</h4>
-              <p>Shortest path algorithm which provided a visual guide for our users and distance calculations for the transit routing algorithm. Due to the size of OSM data, I created a fast, dynamic loading scheme that prevented having to keep all the data in memory at once.</p>
+            <h4>Walking directions for Open Street Maps</h4>
+            <p>Shortest path algorithm which provided a visual guide for our users and distance calculations for the transit routing algorithm. Due to the size of OSM data and constraints of Heroku instances, I created a fast, dynamic loading scheme that prevented having to keep the entire graph in memory at once. The algorithm is also capable of handling problems caused by errors in the OSM data set itself, such as unintentional islands in the graph.</p>
 
-              <h4>Other Responsibilities</h4>
-              <li>Designed and implemented majority of the current production backend from ground up.</li>
-              <li>Business logic for handling real-time data.</li>
-              <li>Backend production releases to EC2 and Heroku.</li>
-            </ul>
+            <h4>Backend Infrastructure</h4>
+            <p>I implemented a majority of the current production backend from the ground up. This includes the aforementioned algorithms, as well as logic for handling real-time data from various transit agencies and tools for processing static data. I was also responsible for the production releases of my code to EC2 and Heroku, including the testing required to make launches go smoothly.</p>
+          </ul>
           </article>
       </section>
       <hr>
@@ -90,9 +85,14 @@
         <h3>Projects</h3>
         <p>Some side projects I've done</p>
       </header>
-        <p>Hi Helen, whee click the resume link. </p>
+        <ul>
+          <h4>Geocoder (Python/C)</h4>
+          <p>A place geocoder/reverse geocoder operating on Geonames data. This is intended for applications which don't need an entire server process to do geocoding. I created a C quadtree extension for Python, allowing fast (.3ms) reverse geocoding queries. It is also small, requiring less than 30MB of memory to geocode the SF Bay Area. The geocoder allows prefix matching starting at any word in any place name.</p>
+
+          <h4>DJ Display (Python/wxPython)</h4>
+          <p>I created a program for Cheryl Burke Dance which allowed a DJ to display a list of ballroom dance types corresponding with the playing song. The display was timer-based, allowing the DJ to automate the display to match their play list. This replaced an older program which only allowed manual manipulation of the list.</p>
+        </ul>
       </section>
-      
     </div>
     <div class="span4">
       <aside>
@@ -101,7 +101,7 @@
           <header>
             <h3>About this Site</h3>
           </header>
-          <p>This site is hosted on an EC2 micro instance. Pages are served by Apache2 and generated by Flask.</p>
+          <p>This site is hosted on an EC2 micro instance. Pages are served by Apache2 and generated by Flask. Web design was aided by Bootstrap.</p>
         </section>
         <section>
           <header>
@@ -116,19 +116,17 @@
     <!-- Footer -->
     <div id="footer">
       <div class="container">
-        <section id="about" class="span4">
+        <section class="span5">
           <header>
-            <h2>About</h2>
+            <h2>(Me)</h2>
           </header>
-          <p>This will be a little bit of personal information about me. It will, for example, explain -- in not overly much detail -- my appreciation for cats.</p>
+          <p>I love keeping up-to-date with the latest technological developments. When I'm not programming, I enjoy ballroom dancing, rock climbing, running, and good food. I'm a big fan of classical music, especially Romantic period symphonies.</p>
         </section>
       </div>
     </div>
   </footer>
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- Le javascript-->
     <script src="jquery.js"></script>
   </div></body>
 </html>
