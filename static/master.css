@@ -51,7 +51,7 @@ span {
     margin-right: 10px;
     padding: 30px;
     border-radius: 22px;
-    background: #1589FF url("fedora.png");
+    background: #1589FF url("fedora.jpg");
     background-size: cover; /* stretch to fit */
     box-shadow: 3px 3px 7px #777;
 }
