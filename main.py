@@ -17,5 +17,13 @@ def get_resume():
     response.headers["Content-Type"] = "application/pdf"
     return response
 
+@app.route("/static/seq.j")
+def test_seq():
+    return open(HOME + "blag/static/seq.j", "r").read()
+
+@app.route("/test")
+def test():
+    return open(HOME + "blag/static/gmaps.html", "r").read()
+
 if __name__ == "__main__":
     app.run()
