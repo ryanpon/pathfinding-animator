@@ -34,7 +34,7 @@
             <ul class="nav">
               <li><a href="static/resume.pdf">Resume</a></li>
               <li><a href="https://github.com/RPon00">GitHub</a></li>
-              <li><a id="contact" href="#">Contact</a></li>
+              <li><a href="mailto:rpon00@gmail.com">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -53,10 +53,6 @@
             <p>I like cool algorithms, data structures, and their implementations, and the way they come together to form systems.</p>
           </div>
           <div class="span2"></div>
-          <div class="span5 hiddenDiv">
-            <h2>Ryan Pon<br>rpon00@gmail.com</h2>
-            </header>
-          </div>
         </div>
       </section>
     </div>
@@ -86,10 +82,13 @@
       </section>
       <hr>
       <section><article class="blogPost"><header>
-        <h3>Projects</h3>
+        <h3>Projects/Awards</h3>
         <p>Some side projects I've done</p>
       </header>
         <ul>
+	  <h4>Best Collaboration at Reroute/sf Hackathon</h4>
+          <p>Created a heat map showing how far one could travel in 30 minutes in any direction by taking public transit, based on live data of bus positions. I adapted a breadth-first graph search algorithm to do the flood that created the data for the visualization.</p>
+
           <h4>Geocoder (Python/C)</h4>
           <p>A place geocoder/reverse geocoder operating on Geonames data. This is intended for applications which don't need an entire server process to do geocoding. I created a C quadtree extension for Python, allowing fast (.3ms) reverse geocoding queries. It is also small, requiring less than 30MB of memory to geocode the SF Bay Area. The geocoder allows prefix matching starting at any word in any place name.</p>
 
@@ -107,12 +106,6 @@
           </header>
           <p>This site is hosted on an EC2 micro instance running Apache2 with Flask. I used Twitter Bootstrap to for facilitate the web design.</p>
         </section>
-        <section>
-          <header>
-            <h3>Another Sidebar</h3>
-          </header>
-          <p>Talk about another little tidbit here?</p>
-        </section>
       </aside>
     </div>
   </div>
@@ -129,18 +122,5 @@
       </div>
     </div>
   </footer>
-
-    <!-- Le javascript-->
-    <script src="static/jquery.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $("div.hiddenDiv").hide();
-      });
-    </script>
-    <script type="text/javascript">
-      $("#contact").click(function() {
-        $("div.hiddenDiv").fadeIn(300);
-      });
-    </script>
   </div></body>
 </html>
