@@ -1,4 +1,4 @@
-import os
+import os, sys
 from flask import Flask, make_response
 app = Flask(__name__)
 app.debug = False
@@ -6,6 +6,10 @@ app.debug = False
 HOME = os.environ.get("HOME", "")
 if HOME:
     HOME = HOME + "/"
+
+if "test" in sys.argv: 
+    app.debug = True
+    HOME += "Dropbox/"
 
 @app.route("/")
 def home():
@@ -19,7 +23,7 @@ def get_resume():
 
 @app.route("/static/seq.j")
 def test_seq():
-    return open(HOME + "blag/static/seq.j", "r").read()
+    return open(HOME + "blag/routing/seq.j", "r").read()
 
 @app.route("/test")
 def test():
