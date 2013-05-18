@@ -48,6 +48,14 @@ def astar_animation(source, dest, graph, coords):
             sequence.append((vertex, subseq))
     return sequence, pred_list
 
+def add_coords_to_seq(seq, coords):
+    needed = {}
+    for node, actions in seq:
+        needed[node] = coords[node]
+        for edge, _ in actions:
+            needed[edge] = coords[edge]
+    return [seq, needed]
+
 def load_graph():
     with open('sf.j', 'r') as fp:
         graph = json.loads(fp.read())
@@ -57,6 +65,7 @@ def load_graph():
 
 if __name__ == '__main__':
     graph, graph_coords = load_graph()
-    seq, pred = astar_animation('65319624', '65360221', graph, graph_coords)
+    seq, pred = astar_animation('633145456', '367017154', graph, graph_coords)
+    seq = add_coords_to_seq(seq, graph_coords)
     with open('seq.j', 'w') as fp:
         fp.write(json.dumps(seq))
