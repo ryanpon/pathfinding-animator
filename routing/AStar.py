@@ -13,7 +13,7 @@ from heapq import heappush, heappop
 from util import HeapSet
 from Quadtree import point_dict_to_quadtree
 from collections import defaultdict
-from gisutil import haversine
+from util import haversine
 # import zlib
 
 def exact_dist(source, dest, graph, coords):
