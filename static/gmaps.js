@@ -7,9 +7,18 @@ Goals:
 
 */
 
-var CHANGE_PRED = 0
-var CONSIDER = 1
-var map;
+var DEFAULT_SOURCE = [37.785775,-122.40602];
+var DEFAULT_DEST = [37.773021,-122.445931];
+var s_marker;
+var e_marker;
+var predList = {};
+
+function encodeQueryData(data) {
+   var ret = [];
+   for (var d in data)
+      ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
+   return ret.join("&");
+}
 
 function initialize() {
   var mapOptions = {
@@ -18,76 +27,92 @@ function initialize() {
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
   map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-  test();
+  setMarkers(DEFAULT_SOURCE, DEFAULT_DEST);
+  setMarkerEvents(map);
 }
 
 function createLL(p) {
   return new google.maps.LatLng(p[0], p[1]);
 }
 
-function test() {
+function requestSequence(map) {
   // load the sequence
-  httpGet("http://localhost:5000/static/seq.j");
+  //var url = "http://localhost:5000/animation";
+  var url = "http://ryanpon.com/animation";
+  var source = s_marker.getPosition();
+  var dest = e_marker.getPosition();
+  var data = {
+    "type": "astar",
+    "source": source.lat() + ',' + source.lng(),
+    "dest": dest.lat() + ',' + dest.lng()
+  };
+  data = encodeQueryData(data);
+  $.getJSON(url, data, function(d) { doAnimation(d, map) } );
 }
 
-function doAnimation(data) {
-  var sequence = data[0];
-  var nodeCoords = data[1];
-  setMarkers(sequence, nodeCoords);
-  var predList = {}
+function doAnimation(data, map) {
+  resetMapLines();
+  var sequence = data["sequence"];
+  var nodeCoords = data["coords"];
   var wait = 0;
   for (var i = 0; i < sequence.length; ++i) {
     var node = sequence[i][0], actions = sequence[i][1];
     for (var k = 0; k < actions.length; ++k) {
-      var edge = actions[k][0], action = actions[k][1];
-      drawAnimation(node, edge, action, nodeCoords, predList, wait);
-      wait += 10;
+      var edge = actions[k];
+      drawAnimation(node, edge, nodeCoords, wait);
+      wait += 5;
     }
   }
 }
 
-function drawAnimation(node, edge, action, nodeCoords, predList, wait) {
-  if (action == CHANGE_PRED) {
+function drawAnimation(node, edge, nodeCoords, wait) {
+  setTimeout(function() {
     if (edge in predList) {
-      predList[edge].setMap(null);  
+      predList[edge].setMap(null);
+      predList[edge] = null;
     }
     var path = [createLL(nodeCoords[node]), createLL(nodeCoords[edge])];
-    var pLine = createPolyline(path);
+    var pLine = createPolyline(path, "#FF0000");
     predList[edge] = pLine;
-    setTimeout(function() {
-      pLine.setMap(map);
-    }, wait);
-  } else {
-    // meh meh
+    pLine.setMap(map);
+  }, wait);
+}
+
+function setMarkers(source, dest) {
+  s_marker = new google.maps.Marker({
+    position: createLL(source),
+    map: map,
+    title:"Start",
+    draggable: true
+  });
+  e_marker = new google.maps.Marker({
+    position: createLL(dest),
+    map: map,
+    title:"End",
+    draggable: true
+  });
+}
+
+function setMarkerEvents(map) {
+  google.maps.event.addListener(s_marker, 'dragend', function() {
+    requestSequence(map);
+  });
+  google.maps.event.addListener(e_marker, 'dragend', function() {
+    requestSequence(map);
+  });
+}
+
+function resetMapLines() {
+  for (var line in predList) {
+    predList[line].setMap(null);
   }
+  predList = {};
 }
 
-function setMarkers(seq, coords) {
-  if (seq.length >= 2) {
-    start = seq[0][0]
-    end = seq[seq.length - 1][0]
-    var s = new google.maps.Marker({
-      position: createLL(coords[start]),
-      map: map,
-      title:"Start"
-    });
-    var e = new google.maps.Marker({
-      position: createLL(coords[end]),
-      map: map,
-      title:"End"
-    });
-  }
-}
-
-function httpGet(url)
-{
-  $.getJSON(url, null, doAnimation);
-}
-
-function createPolyline(path) {
+function createPolyline(path, color) {
   pLine = new google.maps.Polyline({
     path: path,
-    strokeColor: "#FF0000",
+    strokeColor: color,
     strokeOpacity: .7,
     strokeWeight: 1 
   });
