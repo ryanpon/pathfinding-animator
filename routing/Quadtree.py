@@ -1,4 +1,5 @@
 
+
 class Quadtree(object):
     """     
     "The point quadtree is an adaptation of a binary tree used to 
@@ -43,7 +44,6 @@ class Quadtree(object):
             else:
                 pointer.elements[point] = data  # add the element
                 return True
-        assert False, 'Should never get here!'
     
     def branch(self):
         self.convert_to_node()
@@ -68,15 +68,15 @@ class Quadtree(object):
         untried = [self]
         while untried:
             pointer = untried.pop()
-            if (pointer.is_node and 
-                    pointer.rect_intersect(min_x, max_x, min_y, max_y)):
-                untried.extend(pointer.get_children())
-            else:
-                elements = pointer.elements
-                for value in elements:
-                    x, y = value
-                    if not (min_x > x or x > max_x or min_y > y or y > max_y):
-                        result[value] = elements[value]
+            if pointer.rect_intersect(min_x, max_x, min_y, max_y):
+                if pointer.is_node:
+                    untried.extend(pointer.get_children())
+                else:
+                    elements = pointer.elements
+                    for value in elements:
+                        x, y = value
+                        if not (min_x > x or x > max_x or min_y > y or y > max_y):
+                            result[value] = elements[value]
         return result
     
     def select_child(self, point):
@@ -104,10 +104,41 @@ class Quadtree(object):
         return self.nw, self.ne, self.sw, self.se
 
 
-# class MultiQuadtree(Quadtree):
+from collections import defaultdict
 
-#     def __init__(self, min_x, max_x, min_y, max_y, bucket_size=40):
-#         Quadtree.__init__(self, min_x, max_x, min_y, max_y, bucket_size=40)
+class MultiQuadtree(Quadtree):
+    """ Allows multiple insertions at a point by appending data to a list. """
+
+    def __init__(self, min_x, max_x, min_y, max_y, bucket_size=40):
+        Quadtree.__init__(self, min_x, max_x, min_y, max_y, bucket_size)
+        self.elements = defaultdict(list)
+
+    def insert(self, point, data=None):
+        point = tuple(point)
+        if not self.in_bounds(point):
+            return False
+        pointer = self
+        while True:
+            if pointer.is_node:
+                pointer = pointer.select_child(point)    # descend into the tree
+            elif len(pointer.elements) >= pointer.bucket_size:
+                pointer.branch()
+                pointer = pointer.select_child(point)
+            else:
+                pointer.elements[point].append(data)  # add the element
+                return True
+
+    def convert_to_node(self):
+        self.is_node = True
+        dx = self.max_x - self.min_x
+        dy = self.max_y - self.min_y
+        mid_x = self.min_x + dx / 2
+        mid_y = self.min_y + dy / 2
+        buckets = self.bucket_size
+        self.nw = MultiQuadtree(self.min_x, mid_x, mid_y, self.max_y, buckets)
+        self.ne = MultiQuadtree(mid_x, self.max_x, mid_y, self.max_y, buckets)
+        self.se = MultiQuadtree(mid_x, self.max_x, self.min_y, mid_y, buckets)
+        self.sw = MultiQuadtree(self.min_x, mid_x, self.min_y, mid_y, buckets)
 
 
 def bounding_box(point_list):
@@ -124,6 +155,17 @@ def bounding_box(point_list):
         elif y_pnt < min_y:
             min_y = y_pnt
     return min_x, max_x, min_y, max_y
+
+def point_dict_to_quadtree(point_dict, multiquadtree=False):
+    """ Convert a dictionary of { point_id : (lat, lon) } to quadtree. """
+    bbox = bounding_box(point_dict.itervalues())
+    if multiquadtree:
+        qtree = MultiQuadtree(*bbox)
+    else:
+        qtree = Quadtree(*bbox)
+    for pid, coord in point_dict.iteritems():
+        qtree.insert(coord, pid)
+    return qtree
 
 if __name__ == '__main__':
     import cProfile, random, time

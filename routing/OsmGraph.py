@@ -18,7 +18,7 @@ from util import haversine
 def process_osm(osm_path):
     """ 
     Split the object from pyroutelib into two dicts:
-    - adjlist with node_id --> list of edges
+    - adjlist with node_id --> list of arcs
     - dict of node_id : (lat, lon)
     """
     osm = load_osm(osm_path)
@@ -46,14 +46,15 @@ def simple_adjlist(graph, node_coords):
     """ """
     adjlist = defaultdict(list)
     needed_coords = {}
-    for node in (n for n in graph if n in node_coords):
-        needed_coords[node] = node_coords[node]
-        for edge in (e for e in graph[node] if e in node_coords):
-            needed_coords[str(edge)] = node_coords[edge]
-            p1 = node_coords[node]
-            p2 = node_coords[edge]
-            e_tuple = str(edge), haversine(p1, p2)
-            adjlist[str(node)].append(e_tuple)
+    valid_nodes = (n for n in graph if n in node_coords)
+    for vert in valid_nodes:
+        needed_coords[vert] = node_coords[vert]
+        node_ll = node_coords[vert]
+        valid_arcs = (e for e in graph[vert] if e in node_coords)
+        for arc in valid_arcs:
+            needed_coords[str(arc)] = node_coords[arc]
+            e_tuple = str(arc), haversine(node_ll, node_coords[arc])
+            adjlist[str(vert)].append(e_tuple)
     return dict(adjlist), needed_coords
 
 if __name__ == '__main__':
