@@ -3,6 +3,11 @@ import sys
 from flask import Flask, make_response, request
 import json
 
+app = Flask(__name__)
+app.debug = True
+ANIMATOR = None
+init_animator()
+
 if "test" in sys.argv:
     app.debug = True
     HOME = ""
@@ -11,12 +16,6 @@ else:
     HOME = "/home/ubuntu/blag/"
     sys.path.append(HOME + "routing/")
 from AStar import PathfindingAnimator
-
-app = Flask(__name__)
-app.debug = True
-
-ANIMATOR = None
-
 
 def split_comma_ll(ll_string):
     s = ll_string.split(',')
@@ -64,5 +63,4 @@ def test():
     return open(HOME + "static/gmaps.html", "r").read()
 
 if __name__ == "__main__":
-    init_animator()
     app.run()
