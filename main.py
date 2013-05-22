@@ -1,22 +1,21 @@
 import os 
 import sys
-try:
-    import simplejson as json
-except ImportError:
-    import json
-sys.path.append("./routing/")
-sys.path.append("~/blag/routing/")
-from AStar import PathfindingAnimator
 from flask import Flask, make_response, request
+import json
 
-app = Flask(__name__)
-app.debug = False
 if "test" in sys.argv:
     app.debug = True
     HOME = ""
+    sys.path.append("./routing/")
 else:
     HOME = os.environ.get("HOME", "")
     HOME += "/"
+    sys.path.append(HOME + "blag/routing/")
+from AStar import PathfindingAnimator
+
+app = Flask(__name__)
+app.debug = False
+
 ANIMATOR = None
 
 
