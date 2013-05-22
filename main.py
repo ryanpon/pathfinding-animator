@@ -8,11 +8,17 @@ sys.path.append("./routing/")
 sys.path.append("~/blag/routing/")
 from AStar import PathfindingAnimator
 from flask import Flask, make_response, request
+
 app = Flask(__name__)
 app.debug = False
 if "test" in sys.argv:
     app.debug = True
+    HOME = ""
+else:
+    HOME = os.environ.get("HOME", "")
+    HOME += "/"
 ANIMATOR = None
+
 
 def split_comma_ll(ll_string):
     s = ll_string.split(',')
@@ -20,9 +26,9 @@ def split_comma_ll(ll_string):
 
 def init_animator():
     global ANIMATOR
-    with open('routing/sf.j', 'r') as fp:
+    with open(HOME + 'blag/routing/sf.j', 'r') as fp:
         graph = json.loads(fp.read())
-    with open('routing/sf_coords.j', 'r') as fp:
+    with open(HOME + 'blag/routing/sf_coords.j', 'r') as fp:
         graph_coords = json.loads(fp.read())
     ANIMATOR = PathfindingAnimator(graph, graph_coords)
 
