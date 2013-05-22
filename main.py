@@ -5,7 +5,7 @@ try:
 except ImportError:
     import json
 sys.path.append("./routing/")
-sys.path.append("/home/ubuntu/blag/routing/")
+sys.path.append("~/blag/routing/")
 from AStar import PathfindingAnimator
 from flask import Flask, make_response, request
 app = Flask(__name__)
