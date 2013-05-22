@@ -2,7 +2,7 @@
 from heapq import heappush, heappop
 from math import radians, cos, sin, asin, sqrt
 
-def haversine((lat1, lon1), (lat2, lon2)):
+def haversine(lat1, lon1, lat2, lon2):
     """
     Calculate the great circle distance between two points 
     on the earth (specified in decimal degrees)
