@@ -5,8 +5,6 @@ import json
 
 app = Flask(__name__)
 app.debug = True
-ANIMATOR = None
-init_animator()
 
 if "test" in sys.argv:
     app.debug = True
@@ -17,17 +15,15 @@ else:
     sys.path.append(HOME + "routing/")
 from AStar import PathfindingAnimator
 
+with open(HOME + 'routing/sf.j', 'r') as fp:
+    graph = json.loads(fp.read())
+with open(HOME + 'routing/sf_coords.j', 'r') as fp:
+    graph_coords = json.loads(fp.read())
+ANIMATOR = PathfindingAnimator(graph, graph_coords)
+
 def split_comma_ll(ll_string):
     s = ll_string.split(',')
     return float(s[0]), float(s[1])
-
-def init_animator():
-    global ANIMATOR
-    with open(HOME + 'routing/sf.j', 'r') as fp:
-        graph = json.loads(fp.read())
-    with open(HOME + 'routing/sf_coords.j', 'r') as fp:
-        graph_coords = json.loads(fp.read())
-    ANIMATOR = PathfindingAnimator(graph, graph_coords)
 
 @app.route("/")
 def home():
