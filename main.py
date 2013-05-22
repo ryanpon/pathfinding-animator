@@ -8,13 +8,12 @@ if "test" in sys.argv:
     HOME = ""
     sys.path.append("./routing/")
 else:
-    HOME = os.environ.get("HOME", "")
-    HOME += "/"
-    sys.path.append(HOME + "blag/routing/")
+    HOME = "/home/ubuntu/blag/"
+    sys.path.append(HOME + "routing/")
 from AStar import PathfindingAnimator
 
 app = Flask(__name__)
-app.debug = False
+app.debug = True
 
 ANIMATOR = None
 
@@ -25,19 +24,19 @@ def split_comma_ll(ll_string):
 
 def init_animator():
     global ANIMATOR
-    with open(HOME + 'blag/routing/sf.j', 'r') as fp:
+    with open(HOME + 'routing/sf.j', 'r') as fp:
         graph = json.loads(fp.read())
-    with open(HOME + 'blag/routing/sf_coords.j', 'r') as fp:
+    with open(HOME + 'routing/sf_coords.j', 'r') as fp:
         graph_coords = json.loads(fp.read())
     ANIMATOR = PathfindingAnimator(graph, graph_coords)
 
 @app.route("/")
 def home():
-    return open("static/index.html", "r").read()
+    return open(HOME + "static/index.html", "r").read()
 
 @app.route("/static/resume.pdf")
 def get_resume():
-    response = make_response(open("static/resume.pdf", "r").read())
+    response = make_response(open(HOME + "static/resume.pdf", "r").read())
     response.headers["Content-Type"] = "application/pdf"
     return response
 
@@ -62,7 +61,7 @@ def search_animation():
 
 @app.route("/test")
 def test():
-    return open("static/gmaps.html", "r").read()
+    return open(HOME + "static/gmaps.html", "r").read()
 
 if __name__ == "__main__":
     init_animator()
