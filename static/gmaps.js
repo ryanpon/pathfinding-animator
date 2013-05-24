@@ -76,15 +76,14 @@ function doAnimation(data) {
     for (var k = 0; k < actions.length; ++k) {
       var edge = actions[k];
       drawAnimation(node, edge, nodeCoords, wait);
-      wait += 2.5;
+      wait += 5;
     }
   }
 }
 
 function drawAnimation(node, edge, nodeCoords, wait) {
   var path = [createLL(nodeCoords[node]), createLL(nodeCoords[edge])];
-  var pLine = createPolyline(path, "#FF0000", 1);
-  pLine.setVisible(false);
+  var pLine = createPolyline(path, "#FF0000", 1, false);
   pLine.setMap(map);
   polylines.push(pLine);
   setTimeout(function() {
@@ -105,7 +104,7 @@ function drawPath(path) {
   for (var i = 0; i < path.length; ++i) {
     googleLLPath.push(createLL(path[i]));
   }
-  shortPath = createPolyline(googleLLPath, "#000000", 2);
+  shortPath = createPolyline(googleLLPath, "#000000", 2, true);
   shortPath.setMap(map);
 }
 
@@ -144,12 +143,13 @@ function resetMapLines() {
   }
 }
 
-function createPolyline(path, color, size) {
+function createPolyline(path, color, size, visible) {
   pLine = new google.maps.Polyline({
     path: path,
     strokeColor: color,
     strokeOpacity: .7,
-    strokeWeight: size 
+    strokeWeight: size, 
+    visible: visible
   });
   return pLine
 }
