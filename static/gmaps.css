@@ -3,4 +3,21 @@ html, body, #map-canvas {
 margin: 0;
 padding: 0;
 height: 100%;
+z-index: 1;
+}
+
+#map-canvas img { 
+    width: auto; display:inline; 
+    max-width: none;
+}
+
+#buttons {
+    z-index: 2;
+    position: absolute;
+    bottom: 30px;
+    left: 60px;
+}
+
+.btn-group {
+
 }

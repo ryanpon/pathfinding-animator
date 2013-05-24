@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>>
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet">
     <link href="static/gmaps.css" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_lLffvAuLpMF0qHTbZAPuscNsi1P29mI&sensor=true">
     </script>
     <script type="text/javascript" src="static/gmaps.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>>
   </head>
   <body>
-    <div id="map-canvas"/>
+    <div id="buttons" class="row">
+        <div class="btn-group1 span4 " data-toggle="buttons-radio">
+          <button data-value="astar" type="button" class="btn active">A*</button>
+          <button data-value="dijkstra" type="button" class="btn">Dijkstra</button>
+          <button data-value="alt" type="button" class="btn">ALT</button>
+        </div>
+    </div>
+    <div id="map-canvas"></div>
   </body>
 </html>
