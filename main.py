@@ -1,37 +1,35 @@
+
 import os 
 import sys
 from flask import Flask, make_response, request
 import json
 
 app = Flask(__name__)
-app.debug = True
-
+app.debug = False
+# home for EC2 instance
+PATH = "/home/ubuntu/blag/"
 if "test" in sys.argv:
     app.debug = True
-    HOME = ""
-    sys.path.append("./routing/")
-else:
-    HOME = "/home/ubuntu/blag/"
-    sys.path.append(HOME + "routing/")
-from AStar import PathfindingAnimator
+    PATH = ""
+sys.path.append(PATH + "routing/")
+from animator import PathfindingAnimator
 
-with open(HOME + 'routing/sf.j', 'r') as fp:
+with open(PATH + "routing/sf.j") as fp:
     graph = json.loads(fp.read())
-with open(HOME + 'routing/sf_coords.j', 'r') as fp:
+with open(PATH + "routing/sf_coords.j") as fp:
     graph_coords = json.loads(fp.read())
-ANIMATOR = PathfindingAnimator(graph, graph_coords)
+with open(PATH + "routing/lm_dists.j") as fp:
+    lm_dists = json.loads(fp.read())
+ANIMATOR = PathfindingAnimator(graph, graph_coords, lm_dists)
 
-def split_comma_ll(ll_string):
-    s = ll_string.split(',')
-    return float(s[0]), float(s[1])
 
 @app.route("/")
-def home():
-    return open(HOME + "static/index.html", "r").read()
+def index():
+    return open(PATH + "static/index.html", "r").read()
 
 @app.route("/static/resume.pdf")
 def get_resume():
-    response = make_response(open(HOME + "static/resume.pdf", "r").read())
+    response = make_response(open(PATH + "static/resume.pdf", "r").read())
     response.headers["Content-Type"] = "application/pdf"
     return response
 
@@ -56,7 +54,11 @@ def search_animation():
 
 @app.route("/test")
 def test():
-    return open(HOME + "static/gmaps.html", "r").read()
+    return open(PATH + "static/gmaps.html", "r").read()
+
+def split_comma_ll(ll_string):
+    s = ll_string.split(",")
+    return float(s[0]), float(s[1])
 
 if __name__ == "__main__":
     app.run()
