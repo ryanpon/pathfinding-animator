@@ -3,6 +3,11 @@
     display: block;
 }*/
 
+body {
+padding-top: 60px; 
+/* 60px to make the container go all the way to the bottom of the topbar */
+}
+
 #wrapper div {
     margin: 0 auto;
     max-width: 1024px;
