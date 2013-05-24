@@ -87,15 +87,14 @@ function drawAnimation(node, edge, nodeCoords, wait) {
   pLine.setMap(map);
   polylines.push(pLine);
   setTimeout(function() {
-    if (edge in predList) {
-      predList[edge].setMap(null);
-      predList[edge] = null;
-    }
     if (pLine.getMap() != null) {
-      predList[edge] = pLine;
-      pLine.setVisible(true);
+      if (edge in predList) {
+        predList[edge].setMap(null);
+        predList[edge] = null;
+      }
+        predList[edge] = pLine;
+        pLine.setVisible(true);
     } 
-
   }, wait);
 }
 
