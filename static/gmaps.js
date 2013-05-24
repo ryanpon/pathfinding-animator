@@ -15,8 +15,8 @@ var shortPath;
 var predList = {};
 
 function initialize() {
-  $(".btn-group1 .btn").click(function() {
-    $(".btn-group1 .btn").removeClass("active");
+  $(".algo .btn").click(function() {
+    $(".algo .btn").removeClass("active");
     $(this).addClass("active");
   });
 }
@@ -51,7 +51,7 @@ function requestSequence(map) {
   //var url = "http://ryanpon.com/animation";
   var source = sMarker.getPosition();
   var dest = eMarker.getPosition();
-  var algo = $(".btn-group .active").data("value");
+  var algo = $(".algo .active").data("value");
   console.log(algo);
   var data = {
     "type": algo,
