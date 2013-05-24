@@ -10,133 +10,13 @@ try:
 except ImportError:
     import json
 from heapq import heappush, heappop
-from util import HeapSet
 from Quadtree import point_dict_to_quadtree
 from collections import defaultdict
-from util import haversine
-# import zlib
-
-def exact_dist(source, dest, graph, coords):
-    pred_list = {source : 0}
-    closed_set = set()
-    unseen = [(0, source)]    # keeps a set and heap structure
-    while unseen:
-        dist, vert = heappop(unseen)
-        if vert in closed_set:
-            continue
-        elif vert == dest:
-            return dist
-        closed_set.add(vert)
-        for arc, arc_len in graph[vert]:
-            if arc not in closed_set:
-                new_dist = (pred_list[vert] + arc_len)
-                if arc not in pred_list or new_dist < pred_list[arc]:
-                    pred_list[arc] = new_dist
-                    est = new_dist + haversine(coords[arc][0], coords[arc][1], 
-                                               coords[dest][0], coords[dest][1])
-                    heappush(unseen, (est, arc))
-    return None    # no valid path found
-
-
-class PathfindingAnimator(object):
-    """ Animation methods provide the means to draw a graph search. """
-
-    def __init__(self, graph, vertex_coords, landmark_dict=None):
-        self.graph = graph
-        self.vertex_coords = vertex_coords
-        self.landmark_dict = landmark_dict    # for ALT
-        self.qtree = point_dict_to_quadtree(vertex_coords, multiquadtree=True)
-
-    def astar_animation(self, source, dest, epsilon=1):
-        source, dest = self.__find_nearest_vertices(source, dest)
-        heuristic = lambda id1, id2: self.__dist(id1, id2) * epsilon
-        seq, pred_list = self.__astar(source, dest, heuristic)
-        return self.__process_search_result(seq, pred_list, dest)
-
-    def dijkstra_animation(self, source, dest):
-        source, dest = self.__find_nearest_vertices(source, dest)
-        # no heurisitic, so just return zero
-        heuristic = lambda id1, id2: 0
-        seq, pred_list = self.__astar(source, dest, heuristic)
-        return self.__process_search_result(seq, pred_list, dest)
-
-    def alt_animation(self, source, dest):
-        """ A* Landmark Triangle Inequality: ALT Algorithm """
-        pass
-
-    def __process_search_result(self, sequence, pred_list, dest):
-        sequence_coords = self.__sequence_coords(sequence)
-        path = self.__construct_shortest_path(pred_list, dest)
-        return sequence, sequence_coords, path
-
-    def __astar(self, source, dest, heuristic):
-        sequence = []
-        pred_list = {source : {'dist' : 0, 'pred' : None}}
-        closed_set = set()
-        unseen = [(0, source)]    # keeps a set and heap structure
-        while unseen:
-            _, vert = heappop(unseen)
-            if vert in closed_set:
-                continue
-            elif vert == dest:
-                return sequence, pred_list
-            closed_set.add(vert)
-            subseq = self.__relax_vertex(vert, dest, pred_list, 
-                                          unseen, closed_set, heuristic)
-            if subseq:
-                sequence.append((vert, subseq))
-        return None    # no valid path found
-
-    def __relax_vertex(self, vert, dest, pred_list, 
-                        unseen, closed_set, heuristic):
-        subseq = []
-        for arc, arc_len in self.graph[vert]:
-            if arc in closed_set: 
-                continue    # disgard nodes that already have optimal paths
-            new_dist = pred_list[vert]['dist'] + arc_len
-            if arc not in pred_list or new_dist < pred_list[arc]['dist']:
-                # the shortest path to the arc changed, record this
-                subseq.append(arc)
-                pred_list[arc] = {'pred' : vert, 'dist' : new_dist}
-                est = new_dist + heuristic(arc, dest)
-                heappush(unseen, (est, arc))
-        return subseq
-
-    def __construct_shortest_path(self, pred_list, dest):
-        path = []
-        vertex = dest
-        while pred_list[vertex]['pred'] is not None:
-            path.append(vertex)
-            vertex = pred_list[vertex]['pred']
-        path.reverse()
-        path = [self.vertex_coords[v] for v in path]
-        return path
-
-    def __sequence_coords(self, seq):
-        needed = {}
-        for node, actions in seq:
-            needed[node] = self.vertex_coords[node]
-            for arc in actions:
-                needed[arc] = self.vertex_coords[arc]
-        return needed
-
-    def __find_nearest_vertices(self, source, dest):
-        src_node = find_closest_node(source, self.qtree)
-        dest_node = find_closest_node(dest, self.qtree)
-        return src_node, dest_node
-
-    def __dist(self, id1, id2):
-        p1 = self.vertex_coords[id1]
-        p2 = self.vertex_coords[id2]
-        return haversine(p1[0], p1[1], p2[0], p2[1])
-
-
-def load_graph():
-    with open('sf.j', 'r') as fp:
-        graph = json.loads(fp.read())
-    with open('sf_coords.j', 'r') as fp:
-        graph_coords = json.loads(fp.read())
-    return graph, graph_coords
+try:
+    # my personal C module for basic GIS stuff
+    from gisutil import haversine, bearing
+except ImportError:
+    from util import haversine, bearing
 
 def find_closest_node(target, quadtree, rng=.01):
     x, y = target
@@ -148,40 +28,112 @@ def find_closest_node(target, quadtree, rng=.01):
         if dist < best_dist:
             best_dist = dist
             best_node = nodes
-    return best_node[0]
+    if best_node:
+        return best_node[0]
+    else:
+        return None
 
-def animation(src, dest):
-    graph, graph_coords = load_graph()
-    animator = PathfindingAnimator(graph, graph_coords)
-    seq, pred, d = astar_animation(src_node, dest_node, graph, graph_coords)
-    seq = add_coords_to_seq(seq, graph_coords)
-    with open('seq.j', 'w') as fp:
-        fp.write(json.dumps(seq))
+def exact_dist(source, dest, graph, coords, lm_dists):
+    lm_dists = lm_dists[dest]
+    pred_list = {source : 0}
+    closed_set = set()
+    unseen = [(0, source)]    # keeps a set and heap structure
+    while unseen:
+        _, vert = heappop(unseen)
+        if vert in closed_set:
+            # needed because we dont have a heap with decrease-key
+            continue
+        elif vert == dest:
+            return pred_list[vert]
+        closed_set.add(vert)
+        for arc, arc_len in graph[vert]:
+            if arc not in closed_set:
+                new_dist = (pred_list[vert] + arc_len)
+                if arc not in pred_list or new_dist < pred_list[arc]:
+                    pred_list[arc] = new_dist
+                    heappush(unseen, (new_dist + lm_dists[arc], arc))
+    return None    # no valid path found
 
 def landmark_distances(landmarks, graph, graph_coords):
+    lm_est = {}
+    for lm_id, lm_coord in landmarks:
+        lm_est[lm_id] = {}
+        x,y = lm_coord
+        for pid, coord in graph_coords.iteritems():
+            lm_est[lm_id][pid] = haversine(x, y, coord[0], coord[1])
     qtree = point_dict_to_quadtree(graph_coords, multiquadtree=True)
     lm_dists = defaultdict(list)
     l = len(graph_coords)
     for i, pid in enumerate(graph_coords):
         print i, '/', l, ':', pid
-        for landmark in landmarks:
-            d = exact_dist(pid, landmark, graph, graph_coords)
+        for landmark, _ in landmarks:
+            try:
+                d = exact_dist(pid, landmark, graph, graph_coords, lm_est)
+            except KeyError:
+                d = None
             lm_dists[pid].append(d)
-    with open('lm_dists.j', 'w') as fp:
-        fp.write(json.dumps(lm_dists))
     return lm_dists
+
+def planar_landmark_selection(k, origin, coords):
+    sectors = section_plane(k, origin, coords)
+    landmarks = []
+    for sector in sectors:
+        max_dist = float("-inf")
+        best_candidate = None
+        for coord in sector:
+            cur_dist = haversine(origin[0], origin[1], coord[0], coord[1])
+            if cur_dist > max_dist:
+                max_dist = cur_dist
+                best_candidate = coord
+        landmarks.append(best_candidate)
+    return landmarks
+
+def section_plane(k, origin, coords):
+    sectors = [[] for _ in xrange(k)]        
+    sector_size = 360.0 / k
+    for coord in coords.itervalues():
+        b = bearing(origin[0], origin[1], coord[0], coord[1], True)
+        s = int(b / sector_size)
+        sectors[s].append(coord)
+    return sectors
+
+def farthest_landmark_selection(k, origin, coords):
+    landmarks = [origin]
+    for _ in xrange(k):
+        max_dist = float("-inf") 
+        best_candidate = None
+        for pid, coord in coords.iteritems():
+            cur_dist = 0
+            for lm in landmarks:
+                cur_dist += haversine(lm[0], lm[1], coord[0], coord[1])
+            if cur_dist > max_dist and not coord in landmarks:
+                max_dist = cur_dist
+                best_candidate = coord
+        landmarks.append(best_candidate)
+        if len(landmarks) > k:
+            landmarks.pop(0)
+    return landmarks
+
+def load_graph():
+    with open('sf.j', 'r') as fp:
+        graph = json.loads(fp.read())
+    with open('sf_coords.j', 'r') as fp:
+        graph_coords = json.loads(fp.read())
+    return graph, graph_coords
 
 def main():
     graph, graph_coords = load_graph()
+    origin = 37.763251,-122.435616
+    k = 16
+    landmarks = planar_landmark_selection(k, origin, graph_coords)
+    # create a quadtree that can hold multiple items per point
     qtree = point_dict_to_quadtree(graph_coords, multiquadtree=True)
-    landmarks = [(37.779941,-122.511292),
-                 (37.71506,-122.484856),
-                 (37.807343,-122.406235),
-                 (37.726058,-122.379627)]
-    landmarks = [find_closest_node(l, qtree) for l in landmarks]
+    landmarks = zip([find_closest_node(l, qtree) for l in landmarks], landmarks)
     lm_dists = landmark_distances(landmarks, graph, graph_coords)
+    with open('lm_dists_2.j', 'w') as fp:
+        fp.write(json.dumps(lm_dists))
 
 if __name__ == '__main__':
-    #import cProfile
-    #cProfile.run("main()", sort=1)
-    pass
+    main()
+    # import cProfile
+    # cProfile.run('main()', sort=1)
