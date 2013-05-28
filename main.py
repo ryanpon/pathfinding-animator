@@ -13,6 +13,7 @@ if "test" in sys.argv:
     PATH = ""
 sys.path.append(PATH + "routing/")
 from animator import PathfindingAnimator
+from bidirectional import BidirectionalAnimator
 
 with open(PATH + "routing/sf.j") as fp:
     graph = json.loads(fp.read())
@@ -20,6 +21,7 @@ with open(PATH + "routing/sf_coords.j") as fp:
     graph_coords = json.loads(fp.read())
 with open(PATH + "routing/lm_dists.j") as fp:
     lm_dists = json.loads(fp.read())
+BIDIRECTION = BidirectionalAnimator(graph, graph_coords, lm_dists)
 ANIMATOR = PathfindingAnimator(graph, graph_coords, lm_dists)
 
 
@@ -35,16 +37,19 @@ def get_resume():
 
 @app.route("/animation")
 def search_animation():
+    print request.args
     search_type = request.args.get("type")
     source = split_comma_ll(request.args.get("source"))
     dest = split_comma_ll(request.args.get("dest"))
-    print search_type, source, dest
+    animator = ANIMATOR
+    if request.args.get("bidirectional") == "true":
+        animator = BIDIRECTION
     if search_type == "dijkstra":
-        seq, coords, path = ANIMATOR.dijkstra_animation(source, dest)
+        seq, coords, path = animator.dijkstra_animation(source, dest)
     elif search_type == "astar":
-        seq, coords, path = ANIMATOR.astar_animation(source, dest)
+        seq, coords, path = animator.astar_animation(source, dest)
     elif search_type == "alt":
-        seq, coords, path = ANIMATOR.alt_animation(source, dest)
+        seq, coords, path = animator.alt_animation(source, dest)
     response = {
         "sequence" : seq,
         "coords" : coords,
