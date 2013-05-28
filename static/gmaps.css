@@ -18,6 +18,10 @@ z-index: 1;
     left: 60px;
 }
 
+a {
+	z-index: 2;
+}
+
 .btn-group {
 
 }

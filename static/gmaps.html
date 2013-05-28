@@ -5,17 +5,19 @@
     <link href="static/assets/css/bootstrap.css" rel="stylesheet">
     <link href="static/gmaps.css" rel="stylesheet" type="text/css">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_lLffvAuLpMF0qHTbZAPuscNsi1P29mI&sensor=true">
-    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_lLffvAuLpMF0qHTbZAPuscNsi1P29mI&sensor=true"> </script>
     <script type="text/javascript" src="static/gmaps.js"></script>
+    <script type="text/javascript" src="static/assets/js/bootstrap.min.js"></script>
   </head>
   <body>
     <div id="buttons" class="row">
-        <div class="btn-group span4 algo" data-toggle="buttons-radio">
-          <button data-value="astar" type="button" class="btn active">A*</button>
-          <button data-value="dijkstra" type="button" class="btn">Dijkstra</button>
-          <button data-value="alt" type="button" class="btn">ALT</button>
+        <div class="btn-group span3 algo" data-toggle="buttons-radio">
+          <button name="astar" data-value="astar" class="btn btn-inverse active">A*</button>
+          <button name="dijkstra" data-value="dijkstra" class="btn btn-inverse">Dijkstra</button>
+          <button name="alt" data-value="alt" class="btn btn-inverse">ALT</button>
+        </div>
+        <div class="btn-group span4 bidirection" data-toggle="button">
+          <button name="tgl-bi" data-value="tgl-bi" class="btn btn-danger">Bidirectional OFF</button>
         </div>
     </div>
     <div id="map-canvas"></div>
