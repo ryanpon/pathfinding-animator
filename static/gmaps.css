@@ -25,3 +25,8 @@ a {
 .btn-group {
 
 }
+
+.bidirection {
+	position: relative;
+	left: 16px;
+}
