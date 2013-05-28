@@ -11,48 +11,60 @@ var DEFAULT_SOURCE = [37.785775,-122.40602];
 var DEFAULT_DEST = [37.773021,-122.445931];
 var sMarker;
 var eMarker;
-var shortPath;
+var bestPath;
 var predList = {};
 var polylines = [];
 var map;
+var drawSpeeds = {
+  "fast": 5,
+  "slow": 15,
+  "instant": 0
+}
 
 function initialize() {
   initButtons();
 }
 
 function initButtons() {
-  // button group controlling algorithm selection
+  // radio button group controlling algorithm selection
   $(".algo .btn").click(function() {
-    $(".algo .btn").popover("hide");
     $(".algo .btn").removeClass("active");
     $(this).addClass("active");
-    $(this).popover("show");
+    startAnimation();
   });
-  $(".algo .btn").popover({
-    title: "A fuzzy algorithm!",
-    placement: "top",
-    content: "It's so fuzzy I'm gonna die!!!"
-  });
-  $("astar").data("original-title", "FUZZY!");
 
+  // bidirectional toggle button
   $(".bidirection .btn").click(function() {
     if ($(this).hasClass("active")) {
       $(this).removeClass("btn-success");
       $(this).addClass("btn-danger");
       $(this).text("Bidirectional OFF");
+      startAnimation();
     } else {
       $(this).removeClass("btn-danger");
       $(this).addClass("btn-success");
       $(this).text("Bidirectional ON");
     }
+    setTimeout(function() {
+      // brief delay, otherwise it'll start before buttons have changed
+      startAnimation();
+    }, 1);
+  });
+
+  // radio buttons controlling draw speed
+  $(".speed .btn").click(function() {
+    $(".speed .btn").popover("hide");
+    $(".speed .btn").removeClass("active");
+    $(this).addClass("active");
+    $(this).popover("show");
   });
 }
 
 function initializeMap() {
   // enable bootstrap buttons
   var mapOptions = {
-    center: new google.maps.LatLng(37.774,-122.420),
-    zoom: 13,
+    center: new google.maps.LatLng(37.778076,-122.424992),
+    zoom: 14,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     disableDefaultUI: true
   };
@@ -72,7 +84,7 @@ function encodeQueryData(data) {
    return ret.join("&");
 }
 
-function requestSequence() {
+function startAnimation() {
   // load the sequence
   var url = "http://localhost:5000/animation";
   //var url = "http://ryanpon.com/animation";
@@ -80,16 +92,22 @@ function requestSequence() {
   var dest = eMarker.getPosition();
   var bidirectional = $(".bidirection .btn").hasClass("active");
   var data = {
-    "type": $(".btn-group .active").data("value"),
+    "type": $(".algo .active").data("value"),
     "source": source.lat() + ',' + source.lng(),
     "dest": dest.lat() + ',' + dest.lng(),
     "bidirectional": bidirectional
   };
   data = encodeQueryData(data);
-  $.getJSON(url, data, function(d) { doAnimation(d) } );
+  var drawSpeed = getDrawSpeed();
+  $.getJSON(url, data, function(d) { drawAnimation(d, drawSpeed) } );
 }
 
-function doAnimation(data) {
+function getDrawSpeed() {
+  var speedText = $(".speed .active").data("value");
+  return drawSpeeds[speedText];
+}
+
+function drawAnimation(data, drawSpeed) {
   resetMapLines();
   var sequence = data["sequence"];
   var nodeCoords = data["coords"];
@@ -99,14 +117,14 @@ function doAnimation(data) {
     var node = sequence[i][0], actions = sequence[i][1];
     for (var k = 0; k < actions.length; ++k) {
       var edge = actions[k];
-      drawAnimation(node, edge, nodeCoords, wait);
-      wait += 5;
+      drawSegment(node, edge, nodeCoords, wait);
+      wait += drawSpeed;
     }
   }
-  drawPath(path, wait);
+  drawBestPath(path, wait);
 }
 
-function drawAnimation(node, edge, nodeCoords, wait) {
+function drawSegment(node, edge, nodeCoords, wait) {
   var path = [createLL(nodeCoords[node]), createLL(nodeCoords[edge])];
   var pLine = createPolyline(path, "#FF0000", 1, false);
   pLine.setMap(map);
@@ -123,15 +141,16 @@ function drawAnimation(node, edge, nodeCoords, wait) {
   }, wait);
 }
 
-function drawPath(path, wait) {
+function drawBestPath(path, wait) {
   var googleLLPath = [];
   for (var i = 0; i < path.length; ++i) {
     googleLLPath.push(createLL(path[i]));
   }
-  shortPath = createPolyline(googleLLPath, "#000000", 2, false);
-  shortPath.setMap(map);
+  bestPath = createPolyline(googleLLPath, "#000000", 2, false);
+  bestPath.setMap(map);
+  polylines.push(bestPath);
   setTimeout(function() {
-    shortPath.setVisible(true);
+    bestPath.setVisible(true);
   }, wait);
 }
 
@@ -152,10 +171,10 @@ function setMarkers(source, dest) {
 
 function setMarkerEvents() {
   google.maps.event.addListener(sMarker, 'dragend', function() {
-    requestSequence();
+    startAnimation();
   });
   google.maps.event.addListener(eMarker, 'dragend', function() {
-    requestSequence();
+    startAnimation();
   });
 }
 
@@ -165,9 +184,6 @@ function resetMapLines() {
   }
   polylines = [];
   predList = {};
-  if (shortPath) {
-    shortPath.setMap(null);
-  }
 }
 
 function createPolyline(path, color, size, visible) {

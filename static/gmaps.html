@@ -12,12 +12,17 @@
   <body>
     <div id="buttons" class="row">
         <div class="btn-group span3 algo" data-toggle="buttons-radio">
-          <button name="astar" data-value="astar" class="btn btn-inverse active">A*</button>
-          <button name="dijkstra" data-value="dijkstra" class="btn btn-inverse">Dijkstra</button>
-          <button name="alt" data-value="alt" class="btn btn-inverse">ALT</button>
+          <button data-value="astar" class="btn btn-inverse active">A*</button>
+          <button data-value="dijkstra" class="btn btn-inverse">Dijkstra</button>
+          <button data-value="alt" class="btn btn-inverse">ALT</button>
         </div>
-        <div class="btn-group span4 bidirection" data-toggle="button">
+        <div class="btn-group span3 bidirection" data-toggle="button">
           <button name="tgl-bi" data-value="tgl-bi" class="btn btn-danger">Bidirectional OFF</button>
+        </div>
+        <div class="btn-group span2 speed" data-toggle="buttons-radio">
+          <button data-value="fast" class="btn btn-inverse active">Fast</button>
+          <button data-value="slow" class="btn btn-inverse">Slow</button>
+          <button data-value="instant" class="btn btn-inverse">Instant</button>
         </div>
     </div>
     <div id="map-canvas"></div>
