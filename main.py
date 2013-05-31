@@ -59,7 +59,7 @@ def search_animation():
     }
     return json.dumps(response)
 
-@app.route("/test")
+@app.route("/animate")
 def test():
     return open(PATH + "static/gmaps.html", "r").read()
 
