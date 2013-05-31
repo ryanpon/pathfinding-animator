@@ -15,7 +15,6 @@ sys.path.append(PATH + "routing/")
 from Quadtree import point_dict_to_quadtree
 from astar import AStarAnimator
 from bidirectional import BidirectionalAStarAnimator
-from ida import IterativeDeepeningAnimator
 
 with open(PATH + "routing/sf.j") as fp:
     graph = json.loads(fp.read())
@@ -24,7 +23,6 @@ with open(PATH + "routing/sf_coords.j") as fp:
 with open(PATH + "routing/lm_dists.j") as fp:
     lm_dists = json.loads(fp.read())
 quadtree = point_dict_to_quadtree(graph_coords, multiquadtree=True)
-ITER_DEEPENING = IterativeDeepeningAnimator(graph, graph_coords, quadtree)
 BIDIRECTION = BidirectionalAStarAnimator(graph, graph_coords, quadtree, lm_dists)
 ANIMATOR = AStarAnimator(graph, graph_coords, quadtree, lm_dists)
 
