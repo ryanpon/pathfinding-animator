@@ -30,3 +30,7 @@ a {
 	position: relative;
 	left: 16px;
 }
+
+.tooltip-inner {
+    white-space:pre-wrap;
+}
