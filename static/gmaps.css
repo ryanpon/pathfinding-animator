@@ -34,3 +34,10 @@ a {
 .tooltip-inner {
     white-space:pre-wrap;
 }
+
+.alert {
+    z-index: 2;
+    position: absolute;
+    top: 10px;
+    left: 60px;
+}

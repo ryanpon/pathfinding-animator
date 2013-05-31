@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link href="static/assets/css/bootstrap.css" rel="stylesheet">
     <link href="static/gmaps.css" rel="stylesheet" type="text/css">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_lLffvAuLpMF0qHTbZAPuscNsi1P29mI&sensor=true"> </script>
     <script type="text/javascript" src="static/gmaps.js"></script>
     <script type="text/javascript" src="static/assets/js/bootstrap.min.js"></script>
   </head>
   <body>
+    <div class="alert">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Hello!</strong> Choose an algorithm in the bottom right or move a marker to begin.
+    </div>
     <div id="buttons" class="row">
         <div class="btn-group span3 algo" data-toggle="buttons-radio">
           <button data-value="astar" class="astar btn btn-inverse active">A*</button>

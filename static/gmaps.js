@@ -7,8 +7,8 @@ Goals:
         -different options for different algos
 */
 
-var CENTER = [37.778076,-122.424992];          // map center
-var DEFAULT_DEST = [37.773021,-122.445931];    // default routing end
+var CENTER = [37.783876,-122.414524];          // map center
+var DEFAULT_DEST = [37.788047,-122.425339];      // default routing end
 var DEFAULT_SOURCE = [37.785775,-122.40602];   // default routing start
 var eMarker;           // the marker indicating where routing will start
 var sMarker;           // the marker indicating where routing will end
@@ -32,7 +32,7 @@ function initButtons() {
 
     // bidirectional toggle button
     $(".bidirection .btn").click(function () {
-        toggleBidirectional(this);
+        toggleBidirectional($(this));
         setTimeout(function ()  {
             // brief delay, otherwise it'll start before buttons have changed
             startAnimation();
@@ -75,7 +75,7 @@ function initializeMap() {
     // enable bootstrap buttons
     var mapOptions = {
         center: createGLL(CENTER),
-        zoom: 14,
+        zoom: 15,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         disableDefaultUI: true
     };
@@ -209,15 +209,15 @@ function createPolyline(path, color, size, visible) {
 }
 
 function toggleBidirectional(elem) {
-    if ($(this).hasClass("active")) {
-        $(this).removeClass("btn-success");
-        $(this).addClass("btn-danger");
-        $(this).text("Bidirectional OFF");
+    if ($(elem).hasClass("active")) {
+        $(elem).removeClass("btn-success");
+        $(elem).addClass("btn-danger");
+        $(elem).text("Bidirectional OFF");
         startAnimation();
     } else {
-        $(this).removeClass("btn-danger");
-        $(this).addClass("btn-success");
-        $(this).text("Bidirectional ON");
+        $(elem).removeClass("btn-danger");
+        $(elem).addClass("btn-success");
+        $(elem).text("Bidirectional ON");
     }
 }
 
