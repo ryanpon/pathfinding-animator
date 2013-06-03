@@ -5,15 +5,31 @@ try:
     from gisutil import haversine
 except:
     from util import haversine
-
+from graphutil import GraphUtil
 
 class GraphSearchAnimator(object):
     """ Draw a graph search. """
 
-    def __init__(self, graph, vertex_coords, quadtree):
+    def __init__(self, graph, vertex_coords):
+        """ 
+
+        """
         self.graph = graph
-        self.vertex_coords = vertex_coords
-        self.qtree = quadtree
+        self.util = GraphUtil(vertex_coords)
+
+    def _animation(self, source, dest, heuristic):
+        seq, pred_list = self._astar(source, dest, heuristic)
+        return self._process_search_result(seq, pred_list, dest)
+
+    def _process_search_result(self, sequence, pred_list, dest):
+        sequence_coords = self._sequence_coords(sequence)
+        path = self._construct_shortest_path(pred_list, dest)
+        return sequence, sequence_coords, path
+
+    def _find_source_dest(self, source, dest):
+        s_vertex = self.util._find_closest_vertex(source)
+        d_vertex = self.util._find_closest_vertex(dest)
+        return s_vertex, d_vertex
 
     def _construct_shortest_path(self, pred_list, dest):
         """ 
@@ -29,7 +45,7 @@ class GraphSearchAnimator(object):
             path.append(vertex)
             vertex = pred_list[vertex]['pred']
         path.reverse()
-        path = [self.vertex_coords[v] for v in path]
+        path = [self.util.coords[v] for v in path]
         return path
 
     def _sequence_coords(self, seq):
@@ -37,109 +53,17 @@ class GraphSearchAnimator(object):
 
         """
         needed = {}
-        for node, actions in seq:
-            needed[node] = self.vertex_coords[node]
+        coords = self.util.coords
+        for vertex, actions in seq:
+            needed[vertex] = coords[vertex]
             for arc in actions:
-                needed[arc] = self.vertex_coords[arc]
+                needed[arc] = coords[arc]
         return needed
 
-    def _find_closest_vertex(self, target, rng=.01):
-        """ 
-        Using the query_range function of the given quadtree, locate a vertex
-        in the graph that is closest to the given point.
-
-        Arguments:
-        target -- (x, y) point to be matched to the graph.
-
-        Returns:
-        The ID of the vertex that is closest to the given point.
-        """
-        x, y = target
-        close_vertices = self.qtree.query_range(x - rng, x + rng, y - rng, y + rng)
-        best_vertex = None
-        best_dist = float("inf")
-        for point, vertices in close_vertices.iteritems():
-            dist = haversine(point[0], point[1], target[0], target[1])
-            if dist < best_dist:
-                best_dist = dist
-                best_vertex = vertices[0]
-        return best_vertex
-
-    def _euclidean(self, id1, id2):
-        """ 
-        Returns the distance in KM between the two ID'd vertices.
-
-        Arguments:
-        id1, id2 -- IDs matching vertices in self.vertex_coords
-        """
-        x1, y1 = self.vertex_coords[id1]
-        x2, y2 = self.vertex_coords[id2]
-        return haversine(x1, y1, x2, y2)
-
-    def _manhattan(self, id1, id2):
-        """ 
-        Returns the Manhattan distance in KM between the two ID'd vertices.
-
-        (x1, y1)
-        [1]
-         |
-         |
-         |
-         |            (x2, y2) 
-        [3]-----------[2]
-        (x1, y2)
-
-        returns dist(1, 3) + dist(2, 3)
-        """
-        x1, y1 = self.vertex_coords[id1]
-        x2, y2 = self.vertex_coords[id2]
-        x3, y3 = x1, y2
-        return haversine(x3, y3, x2, y2) + haversine(x3, y3, x1, y1)
-
-    def _octile(self, id1, id2):
-        """ 
-        Returns the octile distance in KM between the two ID'd vertices.
-        
-        (x1, y1)
-        [1]
-         |
-         |
-         |
-        [3]
-         | .
-         |   .      
-         |     .
-         |       .
-         |         .
-         |       45( .   
-        [ ]----------[2]
-     
-        returns dist(1, 3) + dist(2, 3)
-        """
-        x1, y1 = self.vertex_coords[id1]
-        x2, y2 = self.vertex_coords[id2]
-        dx, dy = abs(x2 - x1), abs(y2 - y1)
-        if dx > dy:
-            x3 = max(x1, x2) - dy
-            y3 = y1
-        elif dx > dy:
-            x3 = x1 
-            y3 = max(y1, y2) - dx
-        else:
-            return haversine(x1, y1, x2, y2)
-        return haversine(x3, y3, x2, y2) + haversine(x3, y3, x1, y1)
-
-    def _minkowski(self, id1, id2, p):
-        x1, y1 = self.vertex_coords[id1]
-        x2, y2 = self.vertex_coords[id2]
-        return (abs(x2 - x1) ** p + abs(y2 - y1) ** p) **(1/p)
-
-    def _heuristic_selector(self, heuristic, p):
-        h_fun = self._euclidean
+    def _heuristic_selector(self, heuristic):
+        h_fun = self.util._euclidean
         if heuristic == "manhattan":
-            h_fun = self._manhattan
+            h_fun = self.util._manhattan
         elif heuristic == "octile":
-            h_fun = self._octile
-        elif heuristic == "minkowski":
-            h_fun = lambda id1, id2: self._minkowski(id1, id2, p)
+            h_fun = self.util._octile
         return h_fun            
