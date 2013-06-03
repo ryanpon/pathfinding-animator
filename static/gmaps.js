@@ -5,16 +5,15 @@ Goals:
 -SLIDER for speed
 */
 
-var CENTER = [37.787403,-122.415916];          // map center
+var CENTER = [37.787403,-122.415916];            // map center
 var DEFAULT_DEST = [37.788047,-122.425339];      // default routing end
-var DEFAULT_SOURCE = [37.785775,-122.40602];   // default routing start
+var DEFAULT_SOURCE = [37.785775,-122.40602];     // default routing start
 var eMarker;           // the marker indicating where routing will start
 var sMarker;           // the marker indicating where routing will end
 var bestPath;          // a polyline indicating the shortest path found
 var predList = {};     // 
 var polylines = [];    // a list of all polylines created; used for clearing map
 var map;               // google maps API map
-var grid;              // grid to do graph searches on
 var drawSpeeds = {     // duration between rendering each segment in the graph search
     "fast": 5,
     "slow": 15,
@@ -30,6 +29,7 @@ function initialize() {
         $("#map-canvas").css("height", (h));
         $("#buttons").css("height", (h - 9));
 
+
         var w = $(window).width();
         var a = $(".container").width();
         $("#map-canvas").css("width", (w - a - 8));
@@ -38,47 +38,14 @@ function initialize() {
 }
 
 function initButtons() {
-    initMapButtons();
-    // radio button group controlling algorithm selection
-
     // bidirectional toggle button
     $(".bidirection .btn").click(function () {
         toggleBidirectional($(this));
     });
 
-    // radio buttons controlling draw speed
-    $(".speed .btn").click(function () {
-        $(".speed .btn").popover("hide");
-        $(".speed .btn").removeClass("active");
-        $(this).addClass("active");
-        $(this).popover("show");
-    });
-
     $(".go .btn").click(function () {
         startAnimation();
     })
-}
-
-function initMapButtons() {
-    $(".map #grid").click(function () {
-        if (!grid) {
-            initializeGrid();            
-        }
-        $("#grid-canvas div").show();
-        $("#map-canvas div").hide();
-        // hide the popup
-        $(".gmnoprint").next("div").css("z-index", -10);
-    });
-
-    $(".map #sf").click(function () {
-        if (!map) {
-            initializeMap();            
-        }
-        $("#map-canvas div").show();
-        $("#grid-canvas div").hide();
-        // hide the popup
-        $(".gmnoprint").next("div").css("z-index", -10);
-    });
 }
 
 function initializeMap() {
@@ -91,24 +58,11 @@ function initializeMap() {
     };
     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
     setMarkers(DEFAULT_SOURCE, DEFAULT_DEST);
-    //setMarkerEvents();
-}
-
-function createGLL(p) {
-    return new google.maps.LatLng(p[0], p[1]);
-}
-
-function encodeQueryData(data) {
-    var ret = [];
-    for (var d in data)
-            ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
-    return ret.join("&");
 }
 
 function startAnimation() {
     // load the sequence
-    var url = "http://localhost:5000/animation";
-    //var url = "http://ryanpon.com/animation";
+    var url = "/animation";
     var source = sMarker.getPosition();
     var dest = eMarker.getPosition();
     var bidirectional = $(".bidirection .btn").hasClass("active");
@@ -193,15 +147,6 @@ function setMarkers(source, dest) {
     });
 }
 
-function setMarkerEvents() {
-    google.maps.event.addListener(sMarker, "dragend", function ()  {
-        startAnimation();
-    });
-    google.maps.event.addListener(eMarker, "dragend", function ()  {
-        startAnimation();
-    });
-}
-
 function resetMapLines() {
     for (var i = 0; i < polylines.length; ++i) {
         polylines[i].setMap(null);
@@ -229,18 +174,16 @@ function toggleBidirectional(elem) {
     }
 }
 
-/*function testMarkers() {
-    var markers = [];
-    for (var i = 0; i < POINTS.length; ++i) {
-        var m = new google.maps.Marker({
-            position: createGLL(POINTS[i]),
-            map: map,
-            draggable: true
-        });
-        markers.push(m);
-    };
-    return markers;
-}*/
+function createGLL(p) {
+    return new google.maps.LatLng(p[0], p[1]);
+}
+
+function encodeQueryData(data) {
+    var ret = [];
+    for (var d in data)
+            ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
+    return ret.join("&");
+}
 
 google.maps.event.addDomListener(window, "load", initializeMap);
 
