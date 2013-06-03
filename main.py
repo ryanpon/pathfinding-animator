@@ -30,17 +30,16 @@ INDEX = "/"
 RESUME = "/static/resume.pdf"
 REQUEST_ANIMATION = "/animation"
 ANIMATION_PAGE = "/animate"
+GRID_PAGE = "/grid"
+FAVICON = "/favicon.ico"
 
+@app.route(FAVICON)
+def get_favicon():
+    return open(PATH + "static/favicon.ico", "r").read()
 
-@app.route(INDEX)
-def index():
-    return open(PATH + "static/index.html", "r").read()
-
-@app.route(RESUME)
-def get_resume():
-    response = make_response(open(PATH + "static/resume.pdf", "r").read())
-    response.headers["Content-Type"] = "application/pdf"
-    return response
+# @app.route(GRID_PAGE)
+# def grid():
+#     return open(PATH + "static/grid.html", "r").read()
 
 @app.route(REQUEST_ANIMATION)
 def search_animation():
@@ -70,8 +69,18 @@ def search_animation():
     return json.dumps(response)
 
 @app.route(ANIMATION_PAGE)
-def test():
+def animate():
     return open(PATH + "static/gmaps.html", "r").read()
+
+@app.route(INDEX)
+def index():
+    return open(PATH + "static/index.html", "r").read()
+
+@app.route(RESUME)
+def get_resume():
+    response = make_response(open(PATH + "static/resume.pdf", "r").read())
+    response.headers["Content-Type"] = "application/pdf"
+    return response
 
 def split_comma_ll(ll_string):
     s = ll_string.split(",")
