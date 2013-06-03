@@ -31,27 +31,37 @@ class Quadtree(object):
         self.is_node = False
 
     def insert(self, point, data=None):
+        """ 
+        If the given point is in the range of the Quadtree, inserts it.
+
+        Arguments:
+        point -- a tuple or list of (x, y) form.
+
+        Keyword Arguments:
+        data -- an object to be stored along with this point.
+        """
         point = tuple(point)
-        if not self.in_bounds(point):
+        if not self._in_bounds(point):
             return False
         pointer = self
         while True:
             if pointer.is_node:
-                pointer = pointer.select_child(point)    # descend into the tree
+                pointer = pointer._select_child(point)    # descend into the tree
             elif len(pointer.elements) >= pointer.bucket_size:
-                pointer.branch()
-                pointer = pointer.select_child(point)
+                pointer._branch()
+                pointer = pointer._select_child(point)
             else:
                 pointer.elements[point] = data  # add the element
                 return True
     
-    def branch(self):
-        self.convert_to_node()
+    def _branch(self):
+        self._convert_to_node()
         for point, data in self.elements.iteritems():
-            self.select_child(point).elements[point] = data
+            self._select_child(point).elements[point] = data
         del self.elements
 
-    def convert_to_node(self):
+    def _convert_to_node(self):
+        """ Converts this Quadtree from a leaf to a node with no elements. """
         self.is_node = True
         dx = self.max_x - self.min_x
         dy = self.max_y - self.min_y
@@ -64,13 +74,14 @@ class Quadtree(object):
         self.sw = Quadtree(self.min_x, mid_x, self.min_y, mid_y, buckets)
     
     def query_range(self, min_x, max_x, min_y, max_y):
+        """ Returns all points in the given bounding box. """
         result = {}
         untried = [self]
         while untried:
             pointer = untried.pop()
-            if pointer.rect_intersect(min_x, max_x, min_y, max_y):
+            if pointer._rect_intersect(min_x, max_x, min_y, max_y):
                 if pointer.is_node:
-                    untried.extend(pointer.get_children())
+                    untried.extend(pointer._get_children())
                 else:
                     elements = pointer.elements
                     for value in elements:
@@ -79,7 +90,8 @@ class Quadtree(object):
                             result[value] = elements[value]
         return result
     
-    def select_child(self, point):
+    def _select_child(self, point):
+        """ Given a point, returns the child that this point should be placed in. """
         dx = self.max_x - self.min_x
         dy = self.max_y - self.min_y
         x, y = point
@@ -90,17 +102,19 @@ class Quadtree(object):
         else:
             return self.ne if north else self.se
 
-    def rect_intersect(self, min_x, max_x, min_y, max_y):
+    def _rect_intersect(self, min_x, max_x, min_y, max_y):
         """Returns whether this rectangle intersects with another."""
         return not (self.min_x > max_x or self.max_x < min_x or
                     self.min_y > max_y or self.max_y < min_y)
         
-    def in_bounds(self, point):
+    def _in_bounds(self, point):
+        """ Returns whether the given point is in the bounds of this Quadtree. """
         x, y = point
         return ((self.min_x <= x and x <= self.max_x) and 
                 (self.min_y <= y and y <= self.max_y))
 
-    def get_children(self):
+    def _get_children(self):
+        """ Returns the four children of this Quadtree. """
         return self.nw, self.ne, self.sw, self.se
 
 
@@ -115,20 +129,20 @@ class MultiQuadtree(Quadtree):
 
     def insert(self, point, data=None):
         point = tuple(point)
-        if not self.in_bounds(point):
+        if not self._in_bounds(point):
             return False
         pointer = self
         while True:
             if pointer.is_node:
-                pointer = pointer.select_child(point)    # descend into the tree
+                pointer = pointer._select_child(point)    # descend into the tree
             elif len(pointer.elements) >= pointer.bucket_size:
-                pointer.branch()
-                pointer = pointer.select_child(point)
+                pointer._branch()
+                pointer = pointer._select_child(point)
             else:
                 pointer.elements[point].append(data)  # add the element
                 return True
 
-    def convert_to_node(self):
+    def _convert_to_node(self):
         self.is_node = True
         dx = self.max_x - self.min_x
         dy = self.max_y - self.min_y
@@ -166,20 +180,3 @@ def point_dict_to_quadtree(point_dict, multiquadtree=False):
     for pid, coord in point_dict.iteritems():
         qtree.insert(coord, pid)
     return qtree
-
-if __name__ == '__main__':
-    import cProfile, random, time
-    max_rng = 10000
-    size = 10000
-    testarr = [(random.randint(0, max_rng), random.randint(0, max_rng)) 
-                for _ in xrange(size)]
-    qtree = Quadtree(0, max_rng, 0, max_rng)
-    def main():
-        for integer in testarr:
-            qtree.insert(integer)        
-
-    start = time.time()
-    main()
-    print len(qtree.query_range(0, 10000, 0, 10000))
-    print time.time() - start
-    #cProfile.run('main()', sort=1)
