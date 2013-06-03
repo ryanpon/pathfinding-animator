@@ -9,7 +9,6 @@
     <meta name="description" content="About me">
     <meta name="author" content="Ryan">
 
-    <link rel="shortcut icon" href="static/assets/favicon.ico">
     <link href="static/assets/css/bootstrap.css" rel="stylesheet">
     <link href="static/master.css" rel="stylesheet">
     <link href="static/assets/css/bootstrap-responsive.min.css" rel="stylesheet">
@@ -26,9 +25,9 @@
           <a class="brand" href="#">About Me</a>
           <div class="nav">
             <ul class="nav">
-              <li><a href="static/resume.pdf">Resume</a></li>
               <li><a href="https://github.com/RPon00">GitHub</a></li>
               <li><a href="mailto:rpon00@gmail.com">Contact</a></li>
+              <li><a href="/animate">Graph Search Animator</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -80,11 +79,11 @@
         <p>Some side projects I've done</p>
       </header>
         <ul>
-	  <h4>Best Collaboration at Reroute/sf Hackathon</h4>
-          <p>Created a heat map showing how far one could travel in 30 minutes in any direction by taking public transit, based on live data of bus positions. I adapted a breadth-first graph search algorithm to do the flood that created the data for the visualization.</p>
+          <h4><a href="/animate">Graph Search Animator</a></h4>
+          <p>Animates three graph search algorithms: A* search, Dijkstra's Algorithm, and the more recent A* Landmark Triangle Inequality algorithm, as well as their bidirectional variants. The animator illustrates the vertex scanning behavior that these algorithms take as they explore the graph. Take a look at the link above!</p>
 
-          <h4>Geocoder (Python/C)</h4>
-          <p>A place geocoder/reverse geocoder operating on Geonames data. This is intended for applications which don't need an entire server process to do geocoding. I created a C quadtree extension for Python, allowing fast (.3ms) reverse geocoding queries. It is also small, requiring less than 30MB of memory to geocode the SF Bay Area. The geocoder allows prefix matching starting at any word in any place name.</p>
+	        <h4>Best Collaboration at Reroute/sf Hackathon</h4>
+          <p>Created a heat map showing how far one could travel in 30 minutes in any direction by taking public transit, based on live data of bus positions. I adapted a breadth-first graph search algorithm to do the flood that created the data for the visualization.</p>
 
           <h4>DJ Display (Python/wxPython)</h4>
           <p>I created a program for Cheryl Burke Dance which allowed a DJ to display a list of ballroom dance types corresponding with the playing song. The display was timer-based, allowing the DJ to automate the display to match their play list. This replaced an older program which only allowed manual manipulation of the list.</p>
