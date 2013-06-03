@@ -26,32 +26,42 @@ quadtree = point_dict_to_quadtree(graph_coords, multiquadtree=True)
 BIDIRECTION = BidirectionalAStarAnimator(graph, graph_coords, quadtree, lm_dists)
 ANIMATOR = AStarAnimator(graph, graph_coords, quadtree, lm_dists)
 
+INDEX = "/"
+RESUME = "/static/resume.pdf"
+REQUEST_ANIMATION = "/animation"
+ANIMATION_PAGE = "/animate"
 
-@app.route("/")
+
+@app.route(INDEX)
 def index():
     return open(PATH + "static/index.html", "r").read()
 
-@app.route("/static/resume.pdf")
+@app.route(RESUME)
 def get_resume():
     response = make_response(open(PATH + "static/resume.pdf", "r").read())
     response.headers["Content-Type"] = "application/pdf"
     return response
 
-@app.route("/animation")
+@app.route(REQUEST_ANIMATION)
 def search_animation():
-    print request.args
     search_type = request.args.get("type")
     source = split_comma_ll(request.args.get("source"))
     dest = split_comma_ll(request.args.get("dest"))
+    try:
+        epsilon = float(request.args.get("epsilon", 1))
+    except:
+        epsilon = 1
+    heuristic = request.args.get("heuristic", "manhattan")
+
     animator = ANIMATOR
     if request.args.get("bidirectional") == "true":
         animator = BIDIRECTION
     if search_type == "dijkstra":
         seq, coords, path = animator.dijkstra_animation(source, dest)
     elif search_type == "astar":
-        seq, coords, path = animator.astar_animation(source, dest)
+        seq, coords, path = animator.astar_animation(source, dest, heuristic, epsilon)
     elif search_type == "alt":
-        seq, coords, path = animator.alt_animation(source, dest)
+        seq, coords, path = animator.alt_animation(source, dest, epsilon)
     response = {
         "sequence" : seq,
         "coords" : coords,
@@ -59,7 +69,7 @@ def search_animation():
     }
     return json.dumps(response)
 
-@app.route("/animate")
+@app.route(ANIMATION_PAGE)
 def test():
     return open(PATH + "static/gmaps.html", "r").read()
 
