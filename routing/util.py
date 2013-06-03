@@ -1,6 +1,18 @@
 
-from heapq import heappush, heappop
 from math import radians, cos, sin, asin, sqrt
+
+def minkowski(x1, y1, x2, y2, p=2**.5):
+    return (abs(x2 - x1) ** p + abs(y2 - y1) ** p) ** (1/p)
+
+def euclidean(x1, y1, x2, y2):
+    return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** .5
+
+def manhattan(x1, y1, x2, y2):
+    return abs(x2 - x1) + abs(y2 - y1)
+
+def octile(x1, y1, x2, y2):
+    dx, dy = abs(x2 - x1), abs(y2 - y1)
+    return max(dx, dy) + (2**.5 - 1) * min(dx, dy)
 
 def haversine(lat1, lon1, lat2, lon2):
     """
@@ -29,10 +41,6 @@ def bearing(lat1, lon1, lat2, lon2, positive):
         bearing = 360 + bearing
     return bearing
 
-def distance(lat1, lon1, lat2, lon2):
-    """Returns a fast estimate of the distance between two lat/lon points."""
-    return ((lat1 - lat2)**2 + (lon1 - lon2)**2)**.5
-
 def bearing_angle(brng1, brng2):
     """Returns the smallest angle between two bearings."""
     if (brng1 >= 0 and brng2 >= 0 or brng1 <= 0 and brng2 <= 0):
@@ -45,32 +53,3 @@ def bearing_angle(brng1, brng2):
         if result > 180:
             result = abs(result - 360)
         return result
-
-
-class HeapSet(object):
-    """ 
-    A heap that also adds each item to a set for O(1) membership test. 
-
-    If performance is absolutely key, you should use separate heap and set 
-    objects directly in the code. Only implements the methods needed by our
-    AStar algorithms.
-    """
-    #__slots__ = ('set', 'heap')
-    def __init__(self):
-        self.set = set()
-        self.heap = []
-
-    def push(self, value, item=None):
-        self.set.add(item)
-        heappush(self.heap, (value, item))
-
-    def pop(self):
-        item, value = heappop(self.heap)
-        self.set.discard(item)
-        return item, value
-
-    def __contains__(self, item):
-        return item in self.set
-
-    def __nonzero__(self):
-        return bool(self.heap)

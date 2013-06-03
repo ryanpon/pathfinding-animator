@@ -11,28 +11,30 @@ class BidirectionalAStarAnimator(GraphSearchAnimator):
         GraphSearchAnimator.__init__(self, graph, vertex_coords, quadtree)
         self.landmark_dict = landmark_dict    # for ALT
 
-    def astar_animation(self, source, dest, epsilon=1):
+
+    def astar_animation(self, source, dest, heuristic, epsilon=1, p=1.414):
         source = self._find_closest_vertex(source)
         dest = self._find_closest_vertex(dest)
-        heuristic = lambda id1, id2: self._dist(id1, id2) * epsilon
-        seq, pred_list = self.__astar(source, dest, heuristic)
+        h_fun = self._heuristic_selector(heuristic, p)
+        h = lambda id1, id2: h_fun(id1, id2) * epsilon
+        seq, pred_list = self.__astar(source, dest, h)
         return self.__process_search_result(seq, pred_list, dest)
 
     def dijkstra_animation(self, source, dest):
         source = self._find_closest_vertex(source)
         dest = self._find_closest_vertex(dest)
         # no heurisitic, so just return zero
-        heuristic = lambda id1, id2: 0
-        seq, pred_list = self.__astar(source, dest, heuristic)
+        h = lambda id1, id2: 0
+        seq, pred_list = self.__astar(source, dest, h)
         return self.__process_search_result(seq, pred_list, dest)
 
-    def alt_animation(self, source, dest):
+    def alt_animation(self, source, dest, epsilon=1):
         """ A* Landmark Triangle Inequality: ALT Algorithm """
         source = self._find_closest_vertex(source)
         dest = self._find_closest_vertex(dest)
         # no heurisitic, so just return zero
-        heuristic = self.__alt_heuristic
-        seq, pred_list = self.__astar(source, dest, heuristic)
+        h = self.__alt_heuristic
+        seq, pred_list = self.__astar(source, dest, h)
         return self.__process_search_result(seq, pred_list, dest)
 
     def __process_search_result(self, sequence, pred_list, dest):
@@ -40,7 +42,7 @@ class BidirectionalAStarAnimator(GraphSearchAnimator):
         path = self.__construct_shortest_path(pred_list, dest)
         return sequence, sequence_coords, path
 
-    def __astar(self, source, dest, heuristic):
+    def __astar(self, source, dest, h):
         if not source or not dest:
             return {}, []
         sequence = []
@@ -55,14 +57,14 @@ class BidirectionalAStarAnimator(GraphSearchAnimator):
         rev_closed = set()
         rev_unseen = [(0, dest)]
         while rev_unseen and fwd_unseen:
-            fwd_scanned = self.__scan(dest, fwd_unseen, fwd_preds, fwd_closed, heuristic)
+            fwd_scanned = self.__scan(dest, fwd_unseen, fwd_preds, fwd_closed, h)
             fwd_path_len = self.__bidirectional_check(fwd_scanned, fwd_preds, rev_preds, sequence)
             if fwd_path_len > len_shortest:
                 return sequence[2:], (fwd_preds, rev_preds, midpoint)
             len_shortest = fwd_path_len
             midpoint = fwd_scanned
 
-            rev_scanned = self.__scan(source, rev_unseen, rev_preds, rev_closed, heuristic)
+            rev_scanned = self.__scan(source, rev_unseen, rev_preds, rev_closed, h)
             rev_path_len = self.__bidirectional_check(rev_scanned, rev_preds, fwd_preds, sequence)
             if rev_path_len > len_shortest:
                 return sequence[2:], (fwd_preds, rev_preds, midpoint)
@@ -78,7 +80,7 @@ class BidirectionalAStarAnimator(GraphSearchAnimator):
             return len_path
         return float("inf")
 
-    def __scan(self, dest, unseen, pred_list, closed, heuristic):
+    def __scan(self, dest, unseen, pred_list, closed, h):
         _, vert = heappop(unseen)
         closed.add(vert)
         for arc, arc_len in self.graph[vert]:
@@ -89,7 +91,7 @@ class BidirectionalAStarAnimator(GraphSearchAnimator):
                 # the shortest path to the arc changed, record this
                 # subseq.append(arc)
                 pred_list[arc] = {'pred' : vert, 'dist' : new_dist}
-                est = new_dist + heuristic(arc, dest)
+                est = new_dist + h(arc, dest)
                 heappush(unseen, (est, arc))
         # return the scanned vertex so we can check if the search has finished
         return vert
@@ -118,3 +120,4 @@ class BidirectionalAStarAnimator(GraphSearchAnimator):
             if d > max_dist:
                 max_dist = d
         return max_dist
+

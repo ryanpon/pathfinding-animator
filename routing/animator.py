@@ -1,10 +1,11 @@
 
-
+from __future__ import division
 from heapq import heappush, heappop
 try:
     from gisutil import haversine
 except:
     from util import haversine
+
 
 class GraphSearchAnimator(object):
     """ Draw a graph search. """
@@ -64,13 +65,81 @@ class GraphSearchAnimator(object):
                 best_vertex = vertices[0]
         return best_vertex
 
-    def _dist(self, id1, id2):
+    def _euclidean(self, id1, id2):
         """ 
         Returns the distance in KM between the two ID'd vertices.
 
         Arguments:
         id1, id2 -- IDs matching vertices in self.vertex_coords
         """
-        p1 = self.vertex_coords[id1]
-        p2 = self.vertex_coords[id2]
-        return haversine(p1[0], p1[1], p2[0], p2[1])
+        x1, y1 = self.vertex_coords[id1]
+        x2, y2 = self.vertex_coords[id2]
+        return haversine(x1, y1, x2, y2)
+
+    def _manhattan(self, id1, id2):
+        """ 
+        Returns the Manhattan distance in KM between the two ID'd vertices.
+
+        (x1, y1)
+        [1]
+         |
+         |
+         |
+         |            (x2, y2) 
+        [3]-----------[2]
+        (x1, y2)
+
+        returns dist(1, 3) + dist(2, 3)
+        """
+        x1, y1 = self.vertex_coords[id1]
+        x2, y2 = self.vertex_coords[id2]
+        x3, y3 = x1, y2
+        return haversine(x3, y3, x2, y2) + haversine(x3, y3, x1, y1)
+
+    def _octile(self, id1, id2):
+        """ 
+        Returns the octile distance in KM between the two ID'd vertices.
+        
+        (x1, y1)
+        [1]
+         |
+         |
+         |
+        [3]
+         | .
+         |   .      
+         |     .
+         |       .
+         |         .
+         |       45( .   
+        [ ]----------[2]
+     
+        returns dist(1, 3) + dist(2, 3)
+        """
+        x1, y1 = self.vertex_coords[id1]
+        x2, y2 = self.vertex_coords[id2]
+        dx, dy = abs(x2 - x1), abs(y2 - y1)
+        if dx > dy:
+            x3 = max(x1, x2) - dy
+            y3 = y1
+        elif dx > dy:
+            x3 = x1 
+            y3 = max(y1, y2) - dx
+        else:
+            return haversine(x1, y1, x2, y2)
+        return haversine(x3, y3, x2, y2) + haversine(x3, y3, x1, y1)
+
+    def _minkowski(self, id1, id2, p):
+        x1, y1 = self.vertex_coords[id1]
+        x2, y2 = self.vertex_coords[id2]
+        return (abs(x2 - x1) ** p + abs(y2 - y1) ** p) **(1/p)
+
+    def _heuristic_selector(self, heuristic, p):
+        h_fun = self._euclidean
+        if heuristic == "manhattan":
+            h_fun = self._manhattan
+        elif heuristic == "octile":
+            h_fun = self._octile
+        elif heuristic == "minkowski":
+            h_fun = lambda id1, id2: self._minkowski(id1, id2, p)
+        return h_fun            
