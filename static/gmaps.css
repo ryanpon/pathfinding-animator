@@ -1,43 +1,120 @@
 
 html, body, #map-canvas {
-margin: 0;
-padding: 0;
-height: 100%;
-z-index: 1;
+    padding: 0;
+    margin: 0;
 }
 
+hr {
+    padding: 10px;
+    margin: 0;
+    color: black;
+}
+
+h6 {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.go h2 {
+    position: relative;
+    bottom: 8px;
+    font-size: 180%;
+}
+
+.go button {
+    margin-top: 10px;
+    height: 50px;
+}
+
+#title {
+    background-color: #E5E5E5 !important;
+    z-index: 3;
+    margin: 0;
+}
+
+#title h3 {
+    text-align: center;
+    font-size: 230%;
+}
+
+#map-canvas { 
+    float: right;
+    max-width: none;
+    max-height: none;
+    z-index: 1;
+    display: block;
+}
+
+
 #map-canvas img { 
-    width: auto; display:inline; 
+    width: auto; 
+    display:inline; 
     max-width: none;
 }
 
 #buttons {
-    z-index: 2;
     position: absolute;
-    bottom: 30px;
-    left: 60px;
+    left: 0px;
+    z-index: 2;
+    box-shadow: 1px 1px 6px #777;
+    width: 240px;
+    background-color: #FAFAFA;
+    padding: 4px; 
 }
 
-a {
-	z-index: 2;
+#buttons button {
+    text-align: center;
 }
 
-.btn-group {
+.bidirection button {
+    margin: 0;
+}
+
+.btn-group button {
+    width: 33.5%;
+}
+
+.map {
 
 }
 
-.bidirection {
-	position: relative;
-	left: 16px;
+.map button {
+    position: relative;
+    width: 50% !important;
+}
+
+.control-group {
+    text-align: center;
+    margin: 4px 0px;
+}
+
+.control-group input {
+    width: 50px;
+    margin-bottom: 0px;
+}
+
+#heuristics span {
+    font-size: 100%;
+    padding: 0px 0px 0px 0px;
+}
+
+#heuristics .radio {
+    margin-left: 25px;
+}
+
+#heuristic-type span {
+    padding-left: 6px;
+}
+
+#alert {
+    position: absolute;
+    left: 265px;
+    top: 17px;
+    z-index: 2;
+    max-width: 400px;
 }
 
 .tooltip-inner {
     white-space:pre-wrap;
-}
-
-.alert {
-    z-index: 2;
-    position: absolute;
-    top: 20px;
-    left: 60px;
 }

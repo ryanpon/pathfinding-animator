@@ -5,30 +5,76 @@
     <link href="static/assets/css/bootstrap.css" rel="stylesheet">
     <link href="static/gmaps.css" rel="stylesheet" type="text/css">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_lLffvAuLpMF0qHTbZAPuscNsi1P29mI&sensor=true"> </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_lLffvAuLpMF0qHTbZAPuscNsi1P29mI&sensor=false&v=3.12"> </script>
     <script type="text/javascript" src="static/gmaps.js"></script>
     <script type="text/javascript" src="static/assets/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <div class="alert alert-info">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <strong>Hello!</strong> Choose an algorithm in the bottom right or move a marker to begin.
-    </div>
-    <div id="buttons" class="row">
-        <div class="btn-group span3 algo" data-toggle="buttons-radio">
-          <button data-value="astar" class="astar btn btn-inverse active">A*</button>
-          <button data-value="dijkstra" class="dij btn btn-inverse">Dijkstra</button>
-          <button data-value="alt" class="alt btn btn-inverse">ALT</button>
+    <div id="buttons" class="container">
+        <div id="title" class="well well-small"><h3>Graph Search Animator</h3></div>
+
+        <h5>Algorithm:</h5>
+        <div class="btn-group btn-block algo" data-toggle="buttons-radio">
+          <button data-value="astar" class="astar btn active">A*</button>
+          <button data-value="dijkstra" class="dij btn">Dijkstra</button>
+          <button data-value="alt" class="alt btn">ALT</button>
+        </div> 
+        
+        <h5>Algorithm Options:</h5>
+        <div class="bidirection" data-toggle="button">
+          <button name="tgl-bi" data-value="tgl-bi" class="btn btn-block">Bidirectional OFF</button>
         </div>
-        <div class="btn-group span3 bidirection" data-toggle="button">
-          <button name="tgl-bi" data-value="tgl-bi" class="btn btn-danger">Bidirectional OFF</button>
+        
+        <div id="heuristics">
+            <div id="epsilon" class="control-group">
+              <div class="controls">
+                <span class="help-inline">Heuristic Weight (epsilon) </span>
+                <input type="number" value="1.0" min="0" step=".1">
+              </div>
+            </div>
+            <div id="heuristic-type">
+                <span class="help-inline">Heuristic Type (A* only):</span>
+                <label class="radio">
+                    <input type="radio" name="heuristic-radio-btns" value="euclidean" checked>
+                    Euclidean
+                </label>
+                <label class="radio">
+                    <input type="radio" name="heuristic-radio-btns" value="manhattan">
+                    Manhattan
+                </label>
+                <label class="radio">
+                    <input type="radio" name="heuristic-radio-btns" value="octile">
+                    Octile
+                </label>
+<!--                 <label class="radio">
+                    <input type="radio" name="heuristic-radio-btns" value="minkowski">
+                    Minkowski
+                </label>
+ -->            </div>
         </div>
-        <div class="btn-group span2 speed" data-toggle="buttons-radio">
-          <button data-value="fast" class="btn btn-inverse active">Fast</button>
-          <button data-value="slow" class="btn btn-inverse">Slow</button>
-          <button data-value="instant" class="btn btn-inverse">Instant</button>
+
+        <h5>Additional Options:</h5>
+        <h6>Draw Speed</h6>
+        <div class="btn-group btn-block speed" data-toggle="buttons-radio">
+          <button data-value="fast" class="btn active">Fast</button>
+          <button data-value="slow" class="btn">Slow</button>
+          <button data-value="instant" class="btn">Instant</button>
+        </div>
+<!--         <h6>Graph Type</h6>
+        <div class="btn-group btn-block map" data-toggle="buttons-radio">
+          <button id="sf" class="btn active">San Francisco</button>
+          <button id="grid" class="btn">Grid</button>
+        </div> -->
+        <hr>
+        <div class="go" data-toggle="button">
+          <button class="btn btn-block btn-success"><h2>Go!</h2></button>
         </div>
     </div>
     <div id="map-canvas"></div>
+    <div id="grid-canvas"></div>
+    <div id="alert" class="alert alert-info">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Hello!</strong> Choose an algorithm and options and then press "Go!" to begin. Try moving the markers around to see how different algorithms fare in various situations.
+    </div>
   </body>
 </html>

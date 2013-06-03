@@ -1,13 +1,11 @@
 
 /*
 Goals:
---buttons! options for:
-    -animation speed
-    -algorithm type
-        -different options for different algos
+
+-SLIDER for speed
 */
 
-var CENTER = [37.783876,-122.414524];          // map center
+var CENTER = [37.787403,-122.415916];          // map center
 var DEFAULT_DEST = [37.788047,-122.425339];      // default routing end
 var DEFAULT_SOURCE = [37.785775,-122.40602];   // default routing start
 var eMarker;           // the marker indicating where routing will start
@@ -16,6 +14,7 @@ var bestPath;          // a polyline indicating the shortest path found
 var predList = {};     // 
 var polylines = [];    // a list of all polylines created; used for clearing map
 var map;               // google maps API map
+var grid;              // grid to do graph searches on
 var drawSpeeds = {     // duration between rendering each segment in the graph search
     "fast": 5,
     "slow": 15,
@@ -24,19 +23,27 @@ var drawSpeeds = {     // duration between rendering each segment in the graph s
 
 function initialize() {
     initButtons();
+
+    $(window).resize(function () {
+        var h = $(window).height();
+        h = Math.max(h, 600)
+        $("#map-canvas").css("height", (h));
+        $("#buttons").css("height", (h - 9));
+
+        var w = $(window).width();
+        var a = $(".container").width();
+        $("#map-canvas").css("width", (w - a - 8));
+    }).resize();
+
 }
 
 function initButtons() {
+    initMapButtons();
     // radio button group controlling algorithm selection
-    initAlgoButtons();
 
     // bidirectional toggle button
     $(".bidirection .btn").click(function () {
         toggleBidirectional($(this));
-        setTimeout(function ()  {
-            // brief delay, otherwise it'll start before buttons have changed
-            startAnimation();
-        }, 1);
     });
 
     // radio buttons controlling draw speed
@@ -46,42 +53,81 @@ function initButtons() {
         $(this).addClass("active");
         $(this).popover("show");
     });
+
+    $(".go .btn").click(function () {
+        startAnimation();
+    })
 }
 
-function initAlgoButtons() {
-    $(".algo .btn").click(function () {
-        $(".algo .btn").removeClass("active");
-        $(this).addClass("active");
-        startAnimation();
+function initMapButtons() {
+    $(".map #grid").click(function () {
+        if (!grid) {
+            initializeGrid();            
+        }
+        $("#grid-canvas div").show();
+        $("#map-canvas div").hide();
+        // hide the popup
+        $(".gmnoprint").next("div").css("z-index", -10);
     });
 
-    $(".algo .astar").tooltip({
-        placement: "top",
-        title: "A* search algorithm"
-    });
-
-    $(".algo .dij").tooltip({
-        placement: "top",
-        title: "Dijkstra's search algorithm"
-    });
-
-    $(".algo .alt").tooltip({
-        placement: "top",
-        title: "A* Landmark Triangle Inequality"
+    $(".map #sf").click(function () {
+        if (!map) {
+            initializeMap();            
+        }
+        $("#map-canvas div").show();
+        $("#grid-canvas div").hide();
+        // hide the popup
+        $(".gmnoprint").next("div").css("z-index", -10);
     });
 }
 
 function initializeMap() {
-    // enable bootstrap buttons
     var mapOptions = {
         center: createGLL(CENTER),
         zoom: 15,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         disableDefaultUI: true
+
     };
     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
     setMarkers(DEFAULT_SOURCE, DEFAULT_DEST);
-    setMarkerEvents();
+    //setMarkerEvents();
+}
+
+function initializeGrid() {
+
+}
+
+var lastClicked;
+var grid = clickableGrid(10, 10, function (el,row,col,i) {
+    console.log("You clicked on element:",el);
+    console.log("You clicked on row:",row);
+    console.log("You clicked on col:",col);
+    console.log("You clicked on item #:",i);
+
+    el.className='clicked';
+    if (lastClicked) lastClicked.className='';
+    lastClicked = el;
+});
+
+     
+function clickableGrid( rows, cols, callback ){
+    var i=0;
+    var grid = document.createElement('table');
+    grid.className = 'grid';
+    for (var r = 0; r < rows; ++r) {
+        var tr = grid.appendChild(document.createElement('tr'));
+        for (var c = 0; c < cols; ++c) {
+            var cell = tr.appendChild(document.createElement('td'));
+            cell.innerHTML = ++i;
+            cell.addEventListener('click',(function(el,r,c,i){
+                return function () {
+                    callback(el,r,c,i);
+                }
+            })(cell,r,c,i),false);
+        }
+    }
+    return grid;
 }
 
 function createGLL(p) {
@@ -89,10 +135,10 @@ function createGLL(p) {
 }
 
 function encodeQueryData(data) {
-     var ret = [];
-     for (var d in data)
+    var ret = [];
+    for (var d in data)
             ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
-     return ret.join("&");
+    return ret.join("&");
 }
 
 function startAnimation() {
@@ -102,11 +148,14 @@ function startAnimation() {
     var source = sMarker.getPosition();
     var dest = eMarker.getPosition();
     var bidirectional = $(".bidirection .btn").hasClass("active");
+    var heuristic = $("input:radio[name='heuristic-radio-btns']:checked").val();
     var data = {
         "type": $(".algo .active").data("value"),
-        "source": source.lat() + ',' + source.lng(),
-        "dest": dest.lat() + ',' + dest.lng(),
-        "bidirectional": bidirectional
+        "source": source.lat() + "," + source.lng(),
+        "dest": dest.lat() + "," + dest.lng(),
+        "bidirectional": bidirectional,
+        "epsilon": $("#epsilon input").val(),
+        "heuristic": heuristic
     };
     data = encodeQueryData(data);
     var drawSpeed = getDrawSpeed();
@@ -181,10 +230,10 @@ function setMarkers(source, dest) {
 }
 
 function setMarkerEvents() {
-    google.maps.event.addListener(sMarker, 'dragend', function ()  {
+    google.maps.event.addListener(sMarker, "dragend", function ()  {
         startAnimation();
     });
-    google.maps.event.addListener(eMarker, 'dragend', function ()  {
+    google.maps.event.addListener(eMarker, "dragend", function ()  {
         startAnimation();
     });
 }
@@ -210,13 +259,8 @@ function createPolyline(path, color, size, visible) {
 
 function toggleBidirectional(elem) {
     if ($(elem).hasClass("active")) {
-        $(elem).removeClass("btn-success");
-        $(elem).addClass("btn-danger");
         $(elem).text("Bidirectional OFF");
-        startAnimation();
     } else {
-        $(elem).removeClass("btn-danger");
-        $(elem).addClass("btn-success");
         $(elem).text("Bidirectional ON");
     }
 }
@@ -234,7 +278,7 @@ function toggleBidirectional(elem) {
     return markers;
 }*/
 
-google.maps.event.addDomListener(window, 'load', initializeMap);
+google.maps.event.addDomListener(window, "load", initializeMap);
 
 $(document).ready(function () {
     initialize();
