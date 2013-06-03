@@ -28,13 +28,13 @@ haversine(PyObject *self, PyObject *args)
     lat2 = radians(lat2);
     lon2 = radians(lon2);
 
-    const double dlat = lat2 - lat1;
-    const double dlon = lon2 - lon1;
-    const double s_dlat = sin(dlat/2);
-    const double s_dlon = sin(dlon/2);
+    double dlat = lat2 - lat1;
+    double dlon = lon2 - lon1;
+    double s_dlat = sin(dlat/2);
+    double s_dlon = sin(dlon/2);
 
-    const double a = s_dlat * s_dlat + s_dlon * s_dlon * cos(lat1) * cos(lat2);
-    const double c = 2 * asin(sqrt(a));
+    double a = s_dlat * s_dlat + s_dlon * s_dlon * cos(lat1) * cos(lat2);
+    double c = 2 * asin(sqrt(a));
     PyObject *km = Py_BuildValue("d", (c * 6367));
     return km;
 }
@@ -54,9 +54,9 @@ bearing(PyObject *self, PyObject *args)
     {
         return NULL;
     }
-    const double d_lon = lon2 - lon1;
-    const double x = sin(d_lon) * cos(lat2);
-    const double y = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(d_lon);
+    double d_lon = lon2 - lon1;
+    double x = sin(d_lon) * cos(lat2);
+    double y = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(d_lon);
     double bearing = degrees(atan2(x, y));
     if (pos && bearing < 0) {
         bearing += 360;
