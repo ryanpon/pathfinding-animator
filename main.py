@@ -7,41 +7,35 @@ import json
 app = Flask(__name__)
 app.debug = False
 # home for EC2 instance
-PATH = "/home/ubuntu/blag/"
+HOME = "/home/ubuntu/blag/"
 if "test" in sys.argv:
     app.debug = True
-    PATH = ""
-sys.path.append(PATH + "routing/")
+    HOME = ""
+sys.path.append(HOME + "routing/")
 from Quadtree import point_dict_to_quadtree
 from astar import AStarAnimator
 from bidirectional import BidirectionalAStarAnimator
 
-with open(PATH + "routing/sf.j") as fp:
+with open(HOME + "routing/sf.j") as fp:
     graph = json.loads(fp.read())
-with open(PATH + "routing/sf_coords.j") as fp:
+with open(HOME + "routing/sf_coords.j") as fp:
     graph_coords = json.loads(fp.read())
-with open(PATH + "routing/lm_dists.j") as fp:
+with open(HOME + "routing/lm_dists.j") as fp:
     lm_dists = json.loads(fp.read())
 quadtree = point_dict_to_quadtree(graph_coords, multiquadtree=True)
 BIDIRECTION = BidirectionalAStarAnimator(graph, graph_coords, quadtree, lm_dists)
 ANIMATOR = AStarAnimator(graph, graph_coords, quadtree, lm_dists)
 
-INDEX = "/"
-RESUME = "/static/resume.pdf"
-REQUEST_ANIMATION = "/animation"
-ANIMATION_PAGE = "/animate"
-GRID_PAGE = "/grid"
-FAVICON = "/favicon.ico"
 
-@app.route(FAVICON)
+@app.route("/favicon.ico")
 def get_favicon():
-    return open(PATH + "static/favicon.ico", "r").read()
+    return open(HOME + "static/favicon.ico", "r").read()
 
-# @app.route(GRID_PAGE)
+# @app.route("/grid")
 # def grid():
-#     return open(PATH + "static/grid.html", "r").read()
+#     return open(HOME + "static/grid.html", "r").read()
 
-@app.route(REQUEST_ANIMATION)
+@app.route("/animation")
 def search_animation():
     search_type = request.args.get("type")
     source = split_comma_ll(request.args.get("source"))
@@ -68,17 +62,17 @@ def search_animation():
     }
     return json.dumps(response)
 
-@app.route(ANIMATION_PAGE)
+@app.route("/animate")
 def animate():
-    return open(PATH + "static/gmaps.html", "r").read()
+    return open(HOME + "static/gmaps.html", "r").read()
 
-@app.route(INDEX)
+@app.route("/")
 def index():
-    return open(PATH + "static/index.html", "r").read()
+    return open(HOME + "static/index.html", "r").read()
 
-@app.route(RESUME)
+@app.route("/static/resume.pdf")
 def get_resume():
-    response = make_response(open(PATH + "static/resume.pdf", "r").read())
+    response = make_response(open(HOME + "static/resume.pdf", "r").read())
     response.headers["Content-Type"] = "application/pdf"
     return response
 
