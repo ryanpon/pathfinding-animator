@@ -14,18 +14,18 @@ class BidirectionalAStarAnimator(GraphSearchAnimator):
     def astar_animation(self, source, dest, heuristic, epsilon=1):
         source, dest = self._find_source_dest(source, dest)
         h_fun = self._heuristic_selector(heuristic)
-        h = lambda v: h_fun(v, dest) * epsilon
+        h = lambda v, w: h_fun(v, w) * epsilon
         return self._animation(source, dest, h)
 
     def dijkstra_animation(self, source, dest):
         source, dest = self._find_source_dest(source, dest)
-        h = lambda v: 0
+        h = lambda v, w: 0
         return self._animation(source, dest, h)
 
     def alt_animation(self, source, dest, epsilon=1):
         """ A* Landmark Triangle Inequality: ALT Algorithm """
         source, dest = self._find_source_dest(source, dest)
-        h = lambda v: self._alt_heuristic(v, dest) * epsilon
+        h = lambda v, w: self._alt_heuristic(v, w) * epsilon
         return self._animation(source, dest, h)
 
     def _astar(self, source, dest, h):
