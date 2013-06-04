@@ -134,17 +134,27 @@ function drawBestPath(path, wait) {
 
 function setMarkers(source, dest) {
     sMarker = new google.maps.Marker({
+        icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
         position: createGLL(source),
         map: map,
         title:"Start",
         draggable: true
     });
     eMarker = new google.maps.Marker({
+        icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
         position: createGLL(dest),
         map: map,
         title:"End",
         draggable: true
     });
+}
+
+function customMarkerIcon(color) {
+    var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + color,
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 34));
+    return pinImage
 }
 
 function resetMapLines() {
