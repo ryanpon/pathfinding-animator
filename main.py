@@ -6,34 +6,33 @@ import json
 
 app = Flask(__name__)
 app.debug = False
-# home for EC2 instance
+# home for Ubuntu EC2 instance + project directory
 HOME = "/home/ubuntu/blag/"
 if "test" in sys.argv:
     app.debug = True
     HOME = ""
 sys.path.append(HOME + "routing/")
-from Quadtree import point_dict_to_quadtree
 from astar import AStarAnimator
 from bidirectional import BidirectionalAStarAnimator
 
-with open(HOME + "routing/sf.j") as fp:
+with open(HOME + "routing/graph_data/sf.j") as fp:
     graph = json.loads(fp.read())
-with open(HOME + "routing/sf_coords.j") as fp:
+with open(HOME + "routing/graph_data/sf_coords.j") as fp:
     graph_coords = json.loads(fp.read())
-with open(HOME + "routing/lm_dists.j") as fp:
+with open(HOME + "routing/graph_data/lm_dists.j") as fp:
     lm_dists = json.loads(fp.read())
-quadtree = point_dict_to_quadtree(graph_coords, multiquadtree=True)
-BIDIRECTION = BidirectionalAStarAnimator(graph, graph_coords, quadtree, lm_dists)
-ANIMATOR = AStarAnimator(graph, graph_coords, quadtree, lm_dists)
+
+BIDIRECTION = BidirectionalAStarAnimator(graph, graph_coords, lm_dists)
+ANIMATOR = AStarAnimator(graph, graph_coords, lm_dists)
 
 
 @app.route("/favicon.ico")
 def get_favicon():
     return open(HOME + "static/favicon.ico", "r").read()
 
-# @app.route("/grid")
-# def grid():
-#     return open(HOME + "static/grid.html", "r").read()
+@app.route("/grid")
+def grid():
+    return open(HOME + "static/grid.html", "r").read()
 
 @app.route("/animation")
 def search_animation():
@@ -42,7 +41,7 @@ def search_animation():
     dest = split_comma_ll(request.args.get("dest"))
     try:
         epsilon = float(request.args.get("epsilon", 1))
-    except:
+    except ValueError:
         epsilon = 1
     heuristic = request.args.get("heuristic", "manhattan")
 
