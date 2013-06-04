@@ -16,6 +16,22 @@ h6 {
     padding: 0;
 }
 
+i {
+    position: absolute;
+    right: 10px;
+}
+
+.heur-help {
+    margin-top: 4px;
+}
+
+.popover-content {
+    font-size: 90%;
+    font-weight: normal;
+    width: 240px;
+    line-height: 12px;
+}
+
 .go h2 {
     position: relative;
     bottom: 8px;

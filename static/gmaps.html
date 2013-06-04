@@ -14,14 +14,14 @@
     <div id="buttons" class="container">
         <div id="title" class="well well-small"><h3>Graph Search Animator</h3></div>
 
-        <h5>Algorithm:</h5>
+        <h5>Algorithm:<i class="help algo-help icon-info-sign"></i></h5>
         <div class="btn-group btn-block algo" data-toggle="buttons-radio">
           <button data-value="astar" class="astar btn active">A*</button>
           <button data-value="dijkstra" class="dij btn">Dijkstra</button>
           <button data-value="alt" class="alt btn">ALT</button>
         </div> 
         
-        <h5>Algorithm Options:</h5>
+        <h5>Algorithm Options:<i class="help option-help icon-info-sign"></i></h5>
         <div class="bidirection" data-toggle="button">
           <button name="tgl-bi" data-value="tgl-bi" class="btn btn-block">Bidirectional OFF</button>
         </div>
@@ -35,6 +35,7 @@
             </div>
             <div id="heuristic-type">
                 <span class="help-inline">Heuristic Type (A* only):</span>
+                <i class="help heur-help icon-info-sign"></i>
                 <label class="radio">
                     <input type="radio" name="heuristic-radio-btns" value="euclidean" checked>
                     Euclidean

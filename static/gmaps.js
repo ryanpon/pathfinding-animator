@@ -22,6 +22,7 @@ var drawSpeeds = {     // duration between rendering each segment in the graph s
 
 function initialize() {
     initButtons();
+    initHelp();
 
     $(window).resize(function () {
         var h = $(window).height();
@@ -35,6 +36,59 @@ function initialize() {
         $("#map-canvas").css("width", (w - a - 8));
     }).resize();
 
+    setTimeout(function () {
+        $(".alert").close();
+    }, 10000);
+}
+
+function initHelp() {
+    $(".algo-help").click(function () {
+        $(".option-help").popover("hide");
+        $(".heur-help").popover("hide");
+        $(this).popover("toggle");
+    });
+    $(".option-help").click(function () {
+        $(".algo-help").popover("hide");
+        $(".heur-help").popover("hide");
+        $(this).popover("toggle");
+    });
+    $(".heur-help").click(function () {
+        $(".option-help").popover("hide");
+        $(".algo-help").popover("hide");
+        $(this).popover("toggle");
+    });
+
+    var algoText = "Choose between three algorithms:<br>\
+                    -A* search algorithm  <br>\
+                    -Dijkstra's algorithm <br>\
+                    -ALT: A* Landmark Triangle Inequality";
+    $(".algo-help").popover({
+        content: algoText,
+        html: "right",
+        trigger: "manual"
+    });
+
+    var optionText = "The 'Bidirectional' toggle controls whether or not the search is   \
+                      performed from both the origin and destination simultaneously.     \
+                      <br><br> \
+                      Heuristic weight multiplies the A* and ALT heuristics by a constant\
+                      factor, epsilon. Although this will cause routing to scan fewer    \
+                      vertices, the path found will by at most (optimal path len) * epsilon.";
+    $(".option-help").popover({
+        content: optionText,
+        html: "right",
+        trigger: "manual"
+    });
+
+    var heurText = "Choose between three heuristics:<br>\
+                    -Euclidean: straight line distance <br>\
+                    -Manhattan: 'Taxicab' distance <br>\
+                    -Octile: Manhattan w/ diagonal movement";
+    $(".heur-help").popover({
+        content: heurText,
+        html: "right",
+        trigger: "manual"
+    });
 }
 
 function initButtons() {
