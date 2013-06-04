@@ -39,3 +39,4 @@ nosetests.xml
 
 *.DS_store
 test.*
+go_to_server.sh
