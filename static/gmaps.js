@@ -1,10 +1,4 @@
 
-/*
-Goals:
-
--SLIDER for speed
-*/
-
 var CENTER = [37.787403,-122.415916];            // map center
 var DEFAULT_DEST = [37.788047,-122.425339];      // default routing end
 var DEFAULT_SOURCE = [37.785775,-122.40602];     // default routing start
@@ -20,100 +14,9 @@ var drawSpeeds = {     // duration between rendering each segment in the graph s
     "instant": 0
 }
 
-function initialize() {
-    initButtons();
-    initHelp();
-
-    $(window).resize(function () {
-        var h = $(window).height();
-        h = Math.max(h, 600)
-        $("#map-canvas").css("height", (h));
-        $("#buttons").css("height", (h - 9));
-
-
-        var w = $(window).width();
-        var a = $(".container").width();
-        $("#map-canvas").css("width", (w - a - 8));
-    }).resize();
-
-    setTimeout(function () {
-        $(".alert").close();
-    }, 10000);
-}
-
-function initHelp() {
-    $(".algo-help").click(function () {
-        $(".option-help").popover("hide");
-        $(".heur-help").popover("hide");
-        $(this).popover("toggle");
-    });
-    $(".option-help").click(function () {
-        $(".algo-help").popover("hide");
-        $(".heur-help").popover("hide");
-        $(this).popover("toggle");
-    });
-    $(".heur-help").click(function () {
-        $(".option-help").popover("hide");
-        $(".algo-help").popover("hide");
-        $(this).popover("toggle");
-    });
-
-    var algoText = "Choose between three algorithms:<br>\
-                    -A* search algorithm  <br>\
-                    -Dijkstra's algorithm <br>\
-                    -ALT: A* Landmark Triangle Inequality";
-    $(".algo-help").popover({
-        content: algoText,
-        html: "right",
-        trigger: "manual"
-    });
-
-    var optionText = "The 'Bidirectional' toggle controls whether or not the search is   \
-                      performed from both the origin and destination simultaneously.     \
-                      <br><br> \
-                      Heuristic weight multiplies the A* and ALT heuristics by a constant\
-                      factor, epsilon. Although this will cause routing to scan fewer    \
-                      vertices, the path found will by at most (optimal path len) * epsilon.";
-    $(".option-help").popover({
-        content: optionText,
-        html: "right",
-        trigger: "manual"
-    });
-
-    var heurText = "Choose between three heuristics:<br>\
-                    -Euclidean: straight line distance <br>\
-                    -Manhattan: 'Taxicab' distance <br>\
-                    -Octile: Manhattan w/ diagonal movement";
-    $(".heur-help").popover({
-        content: heurText,
-        html: "right",
-        trigger: "manual"
-    });
-}
-
-function initButtons() {
-    // bidirectional toggle button
-    $(".bidirection .btn").click(function () {
-        toggleBidirectional($(this));
-    });
-
-    $(".go .btn").click(function () {
-        startAnimation();
-    })
-}
-
-function initializeMap() {
-    var mapOptions = {
-        center: createGLL(CENTER),
-        zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        disableDefaultUI: true
-
-    };
-    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-    setMarkers(DEFAULT_SOURCE, DEFAULT_DEST);
-}
-
+/*
+ * Initiate animation based on current settings
+ */
 function startAnimation() {
     // load the sequence
     var url = "/animation";
@@ -131,7 +34,9 @@ function startAnimation() {
     };
     data = encodeQueryData(data);
     var drawSpeed = getDrawSpeed();
-    $.getJSON(url, data, function (d) { drawAnimation(d, drawSpeed) } );
+    $.getJSON(url, data, function (d) { 
+        drawAnimation(d["sequence"], d["coords"], d["path"], drawSpeed);
+    });
 }
 
 function getDrawSpeed() {
@@ -139,40 +44,56 @@ function getDrawSpeed() {
     return drawSpeeds[speedText];
 }
 
-function drawAnimation(data, drawSpeed) {
+/*
+ * Arguments:
+ *  sequence -- a list of line segments [[startLatLon] --> [endLatLon]]
+ *  nodeCoords -- a dictionary of node coordinates
+ *  bestPath -- the shortest path found: list of [lat, lon]
+ *  drawSpeed -- the approximate wait time between drawing each segment
+ */
+function drawAnimation(sequence, nodeCoords, bestPath, drawSpeed) {
     resetMapLines();
-    var sequence = data["sequence"];
-    var nodeCoords = data["coords"];
-    var path = data["path"];
-    var wait = 0;
+    var curWait = 0;
     for (var i = 0; i < sequence.length; ++i) {
         var node = sequence[i][0], actions = sequence[i][1];
         for (var k = 0; k < actions.length; ++k) {
             var edge = actions[k];
-            drawSegment(node, edge, nodeCoords, wait);
-            wait += drawSpeed;
+            drawSegment(node, edge, nodeCoords, curWait);
+            curWait += drawSpeed;
         }
     }
-    drawBestPath(path, wait);
+    drawBestPath(bestPath, curWait);
 }
 
-function drawSegment(node, edge, nodeCoords, wait) {
-    var path = [createGLL(nodeCoords[node]), createGLL(nodeCoords[edge])];
+/*
+ * The main drawing function for the expanding graph search.
+ *
+ * Arguments:
+ *  node -- the ID of the node to draw to
+ *  edge -- the ID of the edge to draw to
+ *  nodeCoords -- a dictionary of node coordinates by ID
+ *  wait -- the timeout in milliseconds before the segment appears
+ */
+function drawSegment(nodeID, edgeID, nodeCoords, wait) {
+    var path = [createGLL(nodeCoords[nodeID]), createGLL(nodeCoords[edgeID])];
     var pLine = createPolyline(path, "#FF0000", 1, false);
     pLine.setMap(map);
     polylines.push(pLine);
     setTimeout(function ()  {
         if (pLine.getMap() != null) {
-            if (edge in predList) {
-                predList[edge].setMap(null);
-                predList[edge] = null;
+            if (edgeID in predList) {
+                predList[edgeID].setMap(null);
+                predList[edgeID] = null;
             }
-                predList[edge] = pLine;
+                predList[edgeID] = pLine;
                 pLine.setVisible(true);
         } 
     }, wait);
 }
 
+/*
+ * Draws the shortest path found by the algorithm 
+ */
 function drawBestPath(path, wait) {
     var googleLLPath = [];
     for (var i = 0; i < path.length; ++i) {
@@ -186,6 +107,9 @@ function drawBestPath(path, wait) {
     }, wait);
 }
 
+/*
+ * Draws green start and red end marker from provided [lat, lon]
+ */
 function setMarkers(source, dest) {
     sMarker = new google.maps.Marker({
         icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
@@ -249,8 +173,98 @@ function encodeQueryData(data) {
     return ret.join("&");
 }
 
-google.maps.event.addDomListener(window, "load", initializeMap);
+function initialize() {
+    initButtons();
+    initHelp();
 
-$(document).ready(function () {
-    initialize();
-});
+    $(window).resize(function () {
+        var h = $(window).height();
+        h = Math.max(h, 600)
+        $("#map-canvas").css("height", (h));
+        $("#buttons").css("height", (h - 9));
+
+
+        var w = $(window).width();
+        var a = $(".container").width();
+        $("#map-canvas").css("width", (w - a - 8));
+    }).resize();
+
+    setTimeout(function () {
+        $(".alert").close();
+    }, 10000);
+}
+
+function initHelp() {
+    $(".algo-help").click(function () {
+        $(".option-help").popover("hide");
+        $(".heur-help").popover("hide");
+        $(this).popover("toggle");
+    });
+    $(".option-help").click(function () {
+        $(".algo-help").popover("hide");
+        $(".heur-help").popover("hide");
+        $(this).popover("toggle");
+    });
+    $(".heur-help").click(function () {
+        $(".option-help").popover("hide");
+        $(".algo-help").popover("hide");
+        $(this).popover("toggle");
+    });
+
+    var algoText = "Choose between three algorithms:<br>\
+                    -A* search algorithm  <br>\
+                    -Dijkstra's algorithm <br>\
+                    -ALT: A* Landmark Triangle Inequality";
+    $(".algo-help").popover({
+        content: algoText,
+        html: "right",
+        trigger: "hover"
+    });
+
+    var optionText = "The 'Bidirectional' toggle controls whether or not the search is   \
+                      performed from both the origin and destination simultaneously.     \
+                      <br><br> \
+                      Heuristic weight multiplies the A* and ALT heuristics by a constant\
+                      factor, epsilon. Although this will cause routing to scan fewer    \
+                      vertices, the path found will by at most (optimal path len) * epsilon.";
+    $(".option-help").popover({
+        content: optionText,
+        html: "right",
+        trigger: "hover"
+    });
+
+    var heurText = "Choose between three heuristics:<br>\
+                    -Euclidean: straight line distance <br>\
+                    -Manhattan: 'Taxicab' distance <br>\
+                    -Octile: Manhattan w/ diagonal movement";
+    $(".heur-help").popover({
+        content: heurText,
+        html: "right",
+        trigger: "hover"
+    });
+}
+
+function initButtons() {
+    // bidirectional toggle button
+    $(".bidirection .btn").click(function () {
+        toggleBidirectional($(this));
+    });
+
+    $(".go .btn").click(function () {
+        startAnimation();
+    })
+}
+
+function initializeMap() {
+    var mapOptions = {
+        center: createGLL(CENTER),
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        disableDefaultUI: true
+    };
+    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    setMarkers(DEFAULT_SOURCE, DEFAULT_DEST);
+}
+
+google.maps.event.addDomListener(window, "load", initializeMap);
+initialize();
