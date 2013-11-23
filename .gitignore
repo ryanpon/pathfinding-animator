@@ -21,22 +21,13 @@ lib64
 # Installer logs
 pip-log.txt
 
-# Unit test / coverage reports
 .coverage
-.tox
-nosetests.xml
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
 .project
 .pydevproject
 
 *.pem
 *.log
 
-*.DS_store
+*.DS_Store
 test.*
 go_to_server.sh
