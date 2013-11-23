@@ -2,13 +2,10 @@
 <html>
   <head>
     <title>Graph Search Animator</title>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <link href="static/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/gmaps.css" rel="stylesheet" type="text/css">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_lLffvAuLpMF0qHTbZAPuscNsi1P29mI&sensor=false&v=3.12"> </script>
-    <script type="text/javascript" src="static/gmaps.js"></script>
-    <script type="text/javascript" src="static/assets/js/bootstrap.min.js"></script>
   </head>
   <body>
     <div id="buttons" class="container">
@@ -74,10 +71,13 @@
         <h6>________________________________</h6><!-- lol! -->
     </div>
     <div id="map-canvas"></div>
-    <div id="grid-canvas"></div>
     <div id="alert" class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>Hello!</strong> Choose an algorithm and options and then press "Go!" to begin. Try moving the markers around to see how algorithms fare in different situations.
     </div>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/gmaps.js"></script>
   </body>
 </html>
