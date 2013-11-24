@@ -188,29 +188,9 @@ function initialize() {
         var a = $(".container").width();
         $("#map-canvas").css("width", (w - a - 8));
     }).resize();
-
-    setTimeout(function () {
-        $(".alert").close();
-    }, 10000);
 }
 
 function initHelp() {
-    $(".algo-help").click(function () {
-        $(".option-help").popover("hide");
-        $(".heur-help").popover("hide");
-        $(this).popover("toggle");
-    });
-    $(".option-help").click(function () {
-        $(".algo-help").popover("hide");
-        $(".heur-help").popover("hide");
-        $(this).popover("toggle");
-    });
-    $(".heur-help").click(function () {
-        $(".option-help").popover("hide");
-        $(".algo-help").popover("hide");
-        $(this).popover("toggle");
-    });
-
     var algoText = "Choose between three algorithms:<br>\
                     -A* search algorithm  <br>\
                     -Dijkstra's algorithm <br>\
