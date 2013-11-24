@@ -4,9 +4,13 @@ var DEFAULT_DEST = [37.788047,-122.425339];      // default routing end
 var DEFAULT_SOURCE = [37.785775,-122.40602];     // default routing start
 var eMarker;           // the marker indicating where routing will start
 var sMarker;           // the marker indicating where routing will end
-var bestPath;          // a polyline indicating the shortest path found
-var predList = {};     // 
-var polylines = [];    // a list of all polylines created; used for clearing map
+var predList = {};
+
+var curAnimationID;    // track which animation is currently running
+var plines = {
+    list: [],
+    timeouts: []
+};
 var map;               // google maps API map
 var drawSpeeds = {     // duration between rendering each segment in the graph search
     "fast": 5,
@@ -52,17 +56,26 @@ function getDrawSpeed() {
  *  drawSpeed -- the approximate wait time between drawing each segment
  */
 function drawAnimation(sequence, nodeCoords, bestPath, drawSpeed) {
-    resetMapLines();
     var curWait = 0;
+    var animationID = curAnimationID = uuid();
     for (var i = 0; i < sequence.length; ++i) {
-        var node = sequence[i][0], actions = sequence[i][1];
-        for (var k = 0; k < actions.length; ++k) {
-            var edge = actions[k];
-            drawSegment(node, edge, nodeCoords, curWait);
+        var node = sequence[i][0], edges = sequence[i][1];
+        for (var k = 0; k < edges.length; ++k) {
+            (function (node, edge) {
+                plines.timeouts.push(setTimeout(function ()  {
+                    if (animationID === curAnimationID) {
+                        drawSegment(node, edge, nodeCoords);
+                    }
+                }, curWait));
+            })(node ,edges[k]);
             curWait += drawSpeed;
         }
     }
-    drawBestPath(bestPath, curWait);
+    plines.timeouts.push(setTimeout(function ()  {
+        if (animationID === curAnimationID) {
+            drawBestPath(bestPath);
+        }
+    }, curWait));
 }
 
 /*
@@ -72,39 +85,30 @@ function drawAnimation(sequence, nodeCoords, bestPath, drawSpeed) {
  *  node -- the ID of the node to draw to
  *  edge -- the ID of the edge to draw to
  *  nodeCoords -- a dictionary of node coordinates by ID
- *  wait -- the timeout in milliseconds before the segment appears
  */
-function drawSegment(nodeID, edgeID, nodeCoords, wait) {
+function drawSegment(nodeID, edgeID, nodeCoords) {
     var path = [createGLL(nodeCoords[nodeID]), createGLL(nodeCoords[edgeID])];
-    var pLine = createPolyline(path, "#FF0000", 1, false);
-    pLine.setMap(map);
-    polylines.push(pLine);
-    setTimeout(function ()  {
-        if (pLine.getMap() != null) {
-            if (edgeID in predList) {
-                predList[edgeID].setMap(null);
-                predList[edgeID] = null;
-            }
-                predList[edgeID] = pLine;
-                pLine.setVisible(true);
-        } 
-    }, wait);
+    var polyline = createPolyline(path, "#FF0000", 1, true);
+    polyline.setMap(map);
+    plines.list.push(polyline);
+    if (edgeID in predList) {
+        predList[edgeID].setMap(null);
+        predList[edgeID] = null;
+    }
+    predList[edgeID] = polyline;
 }
 
 /*
  * Draws the shortest path found by the algorithm 
  */
-function drawBestPath(path, wait) {
+function drawBestPath(path) {
     var googleLLPath = [];
     for (var i = 0; i < path.length; ++i) {
         googleLLPath.push(createGLL(path[i]));
     }
-    bestPath = createPolyline(googleLLPath, "#000000", 2, false);
-    bestPath.setMap(map);
-    polylines.push(bestPath);
-    setTimeout(function ()  {
-        bestPath.setVisible(true);
-    }, wait);
+    var polyline = createPolyline(googleLLPath, "#000000", 2, true);
+    polyline.setMap(map);
+    plines.list.push(polyline);
 }
 
 /*
@@ -232,6 +236,13 @@ function initializeMap() {
     };
     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
     setMarkers(DEFAULT_SOURCE, DEFAULT_DEST);
+}
+
+function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
 }
 
 google.maps.event.addDomListener(window, "load", initializeMap);
