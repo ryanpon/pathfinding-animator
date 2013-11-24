@@ -201,8 +201,8 @@ function initHelp() {
                       performed from both the origin and destination simultaneously.     \
                       <br><br> \
                       Heuristic weight multiplies the A* and ALT heuristics by a constant\
-                      factor, epsilon. Although this will cause routing to scan fewer    \
-                      vertices, the path found will by at most (optimal path len) * epsilon.";
+                      factor, epsilon. Although this may cause routing to scan fewer     \
+                      vertices, the length of the path found will now be bounded by (optimal path len) * epsilon.";
     $(".option-help").popover({
         content: optionText,
         html: "right",
