@@ -140,23 +140,26 @@ function customMarkerIcon(color) {
     return pinImage
 }
 
-function resetMapLines() {
-    for (var i = 0; i < polylines.length; ++i) {
-        polylines[i].setMap(null);
+function resetMap() {
+    for (var i = 0; i < plines.timeouts.length; ++i) {
+        clearTimeout(plines.timeouts[i]);
     }
-    polylines = [];
+    for (i = 0; i < plines.list.length; ++i) {
+        plines.list[i].setMap(null);
+    }
+    plines.list = [];
+    plines.timeouts = [];
     predList = {};
 }
 
 function createPolyline(path, color, size, visible) {
-    pLine = new google.maps.Polyline({
+    return new google.maps.Polyline({
         path: path,
         strokeColor: color,
         strokeOpacity: .7,
         strokeWeight: size, 
         visible: visible
     });
-    return pLine
 }
 
 function toggleBidirectional(elem) {
