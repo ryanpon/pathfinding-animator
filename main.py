@@ -2,12 +2,11 @@
 import os 
 import sys
 from flask import Flask, make_response, request
+from flask.ext.gzip import Gzip
 import json
 
 app = Flask(__name__)
-app.debug = False
-# home for Ubuntu EC2 instance + project directory
-HOME = "/home/ubuntu/blag/"
+gzip = Gzip(app, compress_level=9)
 if "test" in sys.argv:
     app.debug = True
     HOME = ""
