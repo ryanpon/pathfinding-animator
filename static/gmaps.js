@@ -22,26 +22,31 @@ var drawSpeeds = {     // duration between rendering each segment in the graph s
  * Initiate animation based on current settings
  */
 function startAnimation() {
-  // load the sequence
-  var url = "/animation";
   var source = sMarker.getPosition();
   var dest = eMarker.getPosition();
-  var bidirectional = $(".bidirection .btn").hasClass("active");
-  var heuristic = $("#heuristic-type input:checked").val();
   var data = {
-    "type": $(".algo .active input").val(),
-    "source": source.lat() + "," + source.lng(),
-    "dest": dest.lat() + "," + dest.lng(),
-    "bidirectional": bidirectional,
-    "epsilon": $("#epsilon input").val(),
-    "heuristic": heuristic
+    type: $(".algo .active input").val(),
+    source: source.lat() + "," + source.lng(),
+    dest: dest.lat() + "," + dest.lng(),
+    bidirectional: $(".bidirection .btn").hasClass("active"),
+    epsilon: $("#epsilon input").val(),
+    heuristic: $("#heuristic-type input:checked").val()
   };
-  data = encodeQueryData(data);
-  var drawSpeed = getDrawSpeed();
-  $.getJSON(url, data, function (d) { 
-    drawAnimation(d["sequence"], d["coords"], d["path"], drawSpeed);
-    $('#go-button').button('reset');
-  });
+  $.ajax("/animation", {
+    type: "GET",
+    data: data,
+    dataType: "json"
+  })
+    .done(function (d) { 
+      console.log(d);
+      drawAnimation(d["sequence"], d["coords"], d["path"], getDrawSpeed());
+    })
+    .fail(function (a,b,c) {
+      console.log(a,b,c);
+    })
+    .always(function () {
+      $('#go-button').button('reset');
+    });
 }
 
 function getDrawSpeed() {
@@ -174,12 +179,12 @@ function createGLL(p) {
   return new google.maps.LatLng(p[0], p[1]);
 }
 
-function encodeQueryData(data) {
-  var ret = [];
-  for (var d in data)
-      ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
-  return ret.join("&");
-}
+// function encodeQueryData(data) {
+//   var ret = [];
+//   for (var d in data)
+//       ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
+//   return ret.join("&");
+// }
 
 function initialize() {
   initButtons();
