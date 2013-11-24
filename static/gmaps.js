@@ -40,6 +40,7 @@ function startAnimation() {
     var drawSpeed = getDrawSpeed();
     $.getJSON(url, data, function (d) { 
         drawAnimation(d["sequence"], d["coords"], d["path"], drawSpeed);
+        $('#go-button').button('reset');
     });
 }
 
@@ -223,8 +224,10 @@ function initButtons() {
     });
 
     $("#go-button").click(function () {
+        resetMap();
         startAnimation();
-    })
+        $(this).button('loading');
+    });
 }
 
 function initializeMap() {
