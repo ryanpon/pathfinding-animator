@@ -49,24 +49,25 @@ def search_animation():
         seq, coords, path = animator.astar_animation(source, dest, heuristic, epsilon)
     elif search_type == "alt":
         seq, coords, path = animator.alt_animation(source, dest, epsilon)
-    response = {
+    data = {
         "sequence" : seq,
         "coords" : coords,
         "path" : path
     }
-    return json.dumps(response)
+
+    return make_response(json.dumps(data))
 
 @app.route("/animate")
 def animate():
-    return open(HOME + "static/gmaps.html", "r").read()
+    return open("static/gmaps.html", "r").read()
 
 @app.route("/")
 def index():
-    return open(HOME + "static/index.html", "r").read()
+    return open("static/index.html", "r").read()
 
 @app.route("/static/resume.pdf")
 def get_resume():
-    response = make_response(open(HOME + "static/resume.pdf", "r").read())
+    response = make_response(open("static/resume.pdf", "r").read())
     response.headers["Content-Type"] = "application/pdf"
     return response
 
