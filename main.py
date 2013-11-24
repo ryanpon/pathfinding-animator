@@ -35,6 +35,7 @@ def search_animation():
     dest = split_comma_ll(request.args.get("dest"))
     try:
         epsilon = float(request.args.get("epsilon", 1))
+        epsilon = epsilon if epsilon >= 0 else 1
     except ValueError:
         epsilon = 1
     heuristic = request.args.get("heuristic", "manhattan")
