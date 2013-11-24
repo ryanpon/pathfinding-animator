@@ -1,111 +1,111 @@
 
 html, body {
-    width: 100%;
-    min-height: 570px;
-    text-rendering: optimizeLegibility;
+  width: 100%;
+  min-height: 570px;
+  text-rendering: optimizeLegibility;
 }
 html, body, #map-canvas {
-    padding: 0;
-    margin: 0;
-    height: 100%;
+  padding: 0;
+  margin: 0;
+  height: 100%;
 }
 h5 {
-    text-align: left !important;
+  text-align: left !important;
 }
 h6 {
-    text-align: center;
-    margin: 0;
-    padding-bottom: 0;
+  text-align: center;
+  margin: 0;
+  padding-bottom: 0;
 }
 
 #go-button {
-    margin-top: 10px;
-    font-size: 2em;
+  margin-top: 10px;
+  font-size: 2em;
 }
 #title {
-    background-color: #E5E5E5 !important;
-    z-index: 3;
-    margin: 0;
+  background-color: #E5E5E5 !important;
+  z-index: 3;
+  margin: 0;
 }
 #title h3 {
-    text-align: center;
-    font-size: 2.3em;
+  text-align: center;
+  font-size: 2.3em;
 }
 #map-canvas { 
-    float: right;
-    max-width: none;
-    max-height: none;
-    width: calc(100% - 240px);
-    z-index: 1;
-    display: block;
+  float: right;
+  max-width: none;
+  max-height: none;
+  width: calc(100% - 240px);
+  z-index: 1;
+  display: block;
 }
 #map-canvas img { 
-    width: auto; 
-    display: inline; 
-    max-width: none;
+  width: auto; 
+  display: inline; 
+  max-width: none;
 }
 #options {
-    float: left;
-    height: 100%;
-    z-index: 2;
-    width: 240px;
-    background-color: #FAFAFA;
-    padding: 6px; 
-    border-right: 1px solid #CCC;
+  float: left;
+  height: 100%;
+  z-index: 2;
+  width: 240px;
+  background-color: #FAFAFA;
+  padding: 6px; 
+  border-right: 1px solid #CCC;
 }
 #heuristics .radio {
-    margin-left: 25px;
+  margin-left: 25px;
 }
 #heuristic-type .help-inline {
-    padding-left: 6px;
+  padding-left: 6px;
 }
 #alert {
-    position: absolute;
-    left: 265px;
-    top: 20px;
-    z-index: 3;
-    max-width: 500px;
+  position: absolute;
+  left: 265px;
+  top: 20px;
+  z-index: 3;
+  max-width: 500px;
 }
 
 .well {
-    padding: .5em;
+  padding: .5em;
 }
 
 .help {
-    float: right;
-    width: 13px;
-    height: 13px;
-    line-height: 13px;
-    font-size: .75em;
-    text-align: center;
-    color: white;
-    background: black;
-    border-radius: 100%;
+  float: right;
+  width: 13px;
+  height: 13px;
+  line-height: 13px;
+  font-size: .75em;
+  text-align: center;
+  color: white;
+  background: black;
+  border-radius: 100%;
 }
 .heur-help {
-    margin-top: 4px;
+  margin-top: 4px;
 }
 
 .bidirection button {
-    margin: 0;
+  margin: 0;
 }
 
 .btn-group .btn {
-    width: 33.5%;
+  width: 33.5%;
 }
 
 .control-group {
-    text-align: center;
-    margin: 4px 0px;
+  text-align: center;
+  margin: 4px 0px;
 }
 .control-group input {
-    width: 50px;
-    margin-bottom: 0px;
+  width: 50px;
+  margin-bottom: 0px;
 }
 .tooltip-inner {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 .popover-content {
-    width: 240px;
-    font-weight: 400;
+  width: 240px;
+  font-weight: 400;
 }
