@@ -9,16 +9,15 @@ app = Flask(__name__)
 gzip = Gzip(app, compress_level=9)
 if "test" in sys.argv:
     app.debug = True
-    HOME = ""
-sys.path.append(HOME + "routing/")
+sys.path.append("routing/")
 from astar import AStarAnimator
 from bidirectional import BidirectionalAStarAnimator
 
-with open(HOME + "routing/graph_data/sf.j") as fp:
+with open("routing/graph_data/sf.j") as fp:
     graph = json.loads(fp.read())
-with open(HOME + "routing/graph_data/sf_coords.j") as fp:
+with open("routing/graph_data/sf_coords.j") as fp:
     graph_coords = json.loads(fp.read())
-with open(HOME + "routing/graph_data/lm_dists.j") as fp:
+with open("routing/graph_data/lm_dists.j") as fp:
     lm_dists = json.loads(fp.read())
 
 BIDIRECTION = BidirectionalAStarAnimator(graph, graph_coords, lm_dists)
@@ -27,11 +26,7 @@ ANIMATOR = AStarAnimator(graph, graph_coords, lm_dists)
 
 @app.route("/favicon.ico")
 def get_favicon():
-    return open(HOME + "static/favicon.ico", "r").read()
-
-@app.route("/grid")
-def grid():
-    return open(HOME + "static/grid.html", "r").read()
+    return open("static/favicon.ico", "r").read()
 
 @app.route("/animation")
 def search_animation():
