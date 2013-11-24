@@ -2,20 +2,20 @@
 html, body {
     width: 100%;
     min-height: 570px;
+    text-rendering: optimizeLegibility;
 }
 html, body, #map-canvas {
     padding: 0;
     margin: 0;
     height: 100%;
 }
+h5 {
+    text-align: left !important;
+}
 h6 {
     text-align: center;
     margin: 0;
     padding-bottom: 0;
-}
-i {
-    position: absolute;
-    right: 10px;
 }
 
 #go-button {
@@ -56,30 +56,34 @@ i {
 #heuristics .radio {
     margin-left: 25px;
 }
-#heuristic-type span {
-    padding-left: 9px;
+#heuristic-type .help-inline {
+    padding-left: 6px;
 }
 #alert {
     position: absolute;
     left: 265px;
-    top: 17px;
+    top: 20px;
     z-index: 3;
-    max-width: 400px;
+    max-width: 500px;
 }
 
 .well {
     padding: .5em;
 }
 
+.help {
+    float: right;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+    font-size: .75em;
+    text-align: center;
+    color: white;
+    background: black;
+    border-radius: 100%;
+}
 .heur-help {
     margin-top: 4px;
-}
-
-.popover-content {
-    font-size: 90%;
-    font-weight: normal;
-    width: 240px;
-    line-height: 12px;
 }
 
 .bidirection button {
@@ -100,4 +104,8 @@ i {
 }
 .tooltip-inner {
     white-space: pre-wrap;
+}
+.popover-content {
+    width: 240px;
+    font-weight: 400;
 }

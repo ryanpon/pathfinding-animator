@@ -11,7 +11,7 @@
     <div id="options" class="container">
         <div id="title" class="well well-small"><h3>Graph Search Animator</h3></div>
 
-        <h5>Algorithm:<i class="help algo-help icon-info-sign"></i></h5>
+        <h5>Algorithm:<span class="help algo-help">?</span></h5>
         <div class="btn-group btn-block algo" data-toggle="buttons">
           <label class="btn btn-primary active">
             <input value="astar" type="radio" name="algorithm"> A*
@@ -25,33 +25,30 @@
         </div>
 
         
-        <h5>Algorithm Options:<i class="help option-help icon-info-sign"></i></h5>
+        <h5>Algorithm Options:<span class="help option-help">?</span></h5>
         <div class="bidirection" data-toggle="button">
           <button name="tgl-bi" data-value="tgl-bi" class="btn btn-primary btn-block">Bidirectional OFF</button>
         </div>
         
         <div id="heuristics">
-            <div id="epsilon" class="control-group">
-              <div class="controls">
-                <span class="help-inline">Heuristic Weight (epsilon) </span>
-                <input type="number" value="1.0" min="0" step=".1">
-              </div>
-            </div>
+            <h5 id="epsilon" class="control-group">
+              Heuristic Weight (epsilon)
+              <input type="number" value="1.0" min="0" step=".1">
+            </h5>
             <div id="heuristic-type">
-                <span class="help-inline">Heuristic Type (A* only):</span>
-                <i class="help heur-help icon-info-sign"></i>
-                <label class="radio">
-                    <input type="radio" name="heuristic-radio-btns" value="euclidean" checked>
-                    Euclidean
-                </label>
-                <label class="radio">
-                    <input type="radio" name="heuristic-radio-btns" value="manhattan">
-                    Manhattan
-                </label>
-                <label class="radio">
-                    <input type="radio" name="heuristic-radio-btns" value="octile">
-                    Octile
-                </label>
+              <h5>Heuristic Type (A* only): <span class="help heur-help">?</span></h5>
+              <label class="radio">
+                  <input type="radio" name="heuristic-radio-btns" value="euclidean" checked>
+                  Euclidean
+              </label>
+              <label class="radio">
+                  <input type="radio" name="heuristic-radio-btns" value="manhattan">
+                  Manhattan
+              </label>
+              <label class="radio">
+                  <input type="radio" name="heuristic-radio-btns" value="octile">
+                  Octile
+              </label>
             </div>
         </div>
 
@@ -74,7 +71,7 @@
           <button id="grid" class="btn">Grid</button>
         </div> -->
         <h6>________________________________</h6>
-        <button id="go-button" class="btn btn-block btn-success">
+        <button id="go-button" class="btn btn-block btn-success" data-loading-text="going...">
           Go!
         </button>
         <h6>________________________________</h6><!-- lol! -->
@@ -82,7 +79,7 @@
     <div id="map-canvas"></div>
     <div id="alert" class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Hello!</strong> Choose an algorithm and options and then press "Go!" to begin. Try moving the markers around to see how algorithms fare in different situations.
+        <strong>Hello!</strong> Choose an algorithm and options and then press "Go!" to begin. Try moving the markers around to see how algorithms fare in different situations. Note that the data running the simulation has been restricted to San Francisco city.
     </div>
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
