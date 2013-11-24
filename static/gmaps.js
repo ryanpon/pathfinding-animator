@@ -23,9 +23,9 @@ function startAnimation() {
     var source = sMarker.getPosition();
     var dest = eMarker.getPosition();
     var bidirectional = $(".bidirection .btn").hasClass("active");
-    var heuristic = $("input:radio[name='heuristic-radio-btns']:checked").val();
+    var heuristic = $("#heuristic-type input:checked").val();
     var data = {
-        "type": $(".algo .active").data("value"),
+        "type": $(".algo .active input").val(),
         "source": source.lat() + "," + source.lng(),
         "dest": dest.lat() + "," + dest.lng(),
         "bidirectional": bidirectional,
@@ -40,7 +40,7 @@ function startAnimation() {
 }
 
 function getDrawSpeed() {
-    var speedText = $(".speed .active").data("value");
+    var speedText = $(".speed .active input").val();
     return drawSpeeds[speedText];
 }
 
@@ -176,18 +176,6 @@ function encodeQueryData(data) {
 function initialize() {
     initButtons();
     initHelp();
-
-    $(window).resize(function () {
-        var h = $(window).height();
-        h = Math.max(h, 600)
-        $("#map-canvas").css("height", (h));
-        $("#buttons").css("height", (h - 9));
-
-
-        var w = $(window).width();
-        var a = $(".container").width();
-        $("#map-canvas").css("width", (w - a - 8));
-    }).resize();
 }
 
 function initHelp() {
@@ -230,7 +218,7 @@ function initButtons() {
         toggleBidirectional($(this));
     });
 
-    $(".go .btn").click(function () {
+    $("#go-button").click(function () {
         startAnimation();
     })
 }

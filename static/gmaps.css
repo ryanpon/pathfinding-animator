@@ -1,24 +1,74 @@
 
+html, body {
+    width: 100%;
+    min-height: 570px;
+}
 html, body, #map-canvas {
     padding: 0;
     margin: 0;
+    height: 100%;
 }
-
-hr {
-    padding: 10px;
-    margin: 0;
-    color: black;
-}
-
 h6 {
     text-align: center;
     margin: 0;
-    padding: 0;
+    padding-bottom: 0;
 }
-
 i {
     position: absolute;
     right: 10px;
+}
+
+#go-button {
+    margin-top: 10px;
+    font-size: 2em;
+}
+#title {
+    background-color: #E5E5E5 !important;
+    z-index: 3;
+    margin: 0;
+}
+#title h3 {
+    text-align: center;
+    font-size: 2.3em;
+}
+#map-canvas { 
+    float: right;
+    max-width: none;
+    max-height: none;
+    width: calc(100% - 240px);
+    z-index: 1;
+    display: block;
+}
+#map-canvas img { 
+    width: auto; 
+    display: inline; 
+    max-width: none;
+}
+#options {
+    float: left;
+    height: 100%;
+    z-index: 2;
+    width: 240px;
+    background-color: #FAFAFA;
+    padding: 6px; 
+    border-right: 1px solid #CCC;
+}
+#heuristics .radio {
+    margin-left: 25px;
+}
+#heuristic-type span {
+    padding-left: 9px;
+}
+#alert {
+    position: absolute;
+    left: 265px;
+    top: 17px;
+    z-index: 3;
+    max-width: 400px;
+}
+
+.well {
+    padding: .5em;
 }
 
 .heur-help {
@@ -32,105 +82,22 @@ i {
     line-height: 12px;
 }
 
-.go h2 {
-    position: relative;
-    bottom: 8px;
-    font-size: 180%;
-}
-
-.go button {
-    margin-top: 10px;
-    height: 50px;
-}
-
-#title {
-    background-color: #E5E5E5 !important;
-    z-index: 3;
-    margin: 0;
-}
-
-#title h3 {
-    text-align: center;
-    font-size: 230%;
-}
-
-#map-canvas { 
-    float: right;
-    max-width: none;
-    max-height: none;
-    z-index: 1;
-    display: block;
-}
-
-
-#map-canvas img { 
-    width: auto; 
-    display:inline; 
-    max-width: none;
-}
-
-#buttons {
-    position: absolute;
-    left: 0px;
-    z-index: 2;
-    box-shadow: 1px 1px 6px #777;
-    width: 240px;
-    background-color: #FAFAFA;
-    padding: 4px; 
-}
-
-#buttons button {
-    text-align: center;
-}
-
 .bidirection button {
     margin: 0;
 }
 
-.btn-group button {
+.btn-group .btn {
     width: 33.5%;
-}
-
-.map {
-
-}
-
-.map button {
-    position: relative;
-    width: 50% !important;
 }
 
 .control-group {
     text-align: center;
     margin: 4px 0px;
 }
-
 .control-group input {
     width: 50px;
     margin-bottom: 0px;
 }
-
-#heuristics span {
-    font-size: 100%;
-    padding: 0px 0px 0px 0px;
-}
-
-#heuristics .radio {
-    margin-left: 25px;
-}
-
-#heuristic-type span {
-    padding-left: 6px;
-}
-
-#alert {
-    position: absolute;
-    left: 265px;
-    top: 17px;
-    z-index: 3;
-    max-width: 400px;
-}
-
 .tooltip-inner {
-    white-space:pre-wrap;
+    white-space: pre-wrap;
 }
