@@ -64,16 +64,23 @@ function getDrawSpeed() {
 function drawAnimation(sequence, nodeCoords, bestPath, drawSpeed) {
   var curWait = 0;
   var animationID = curAnimationID = uuid();
-  for (var i = 0; i < sequence.length; ++i) {
+
+  for (var i = 0, seqLen = sequence.length; i < seqLen; ++i) {
     var node = sequence[i][0], edges = sequence[i][1];
     for (var k = 0; k < edges.length; ++k) {
+      if (i < seqLen / 2) {
+        var color = "rgba(" + ~~(255 * 2 * i / seqLen) + ",255,0,1)";
+      } else {
+        var color = "rgba(255," + 2 * ~~(255 - 255 * i / seqLen) + ",0,1)";
+      }
+      // var color = "rgba(255, 0, 0, .8)";
       (function (node, edge, color) {
         plines.timeouts.push(setTimeout(function ()  {
           if (animationID === curAnimationID) {
-            drawSegment(node, edge, nodeCoords);
+            drawSegment(node, edge, nodeCoords, color);
           }
         }, curWait));
-      })(node ,edges[k]);
+      })(node ,edges[k], color);
       curWait += drawSpeed;
     }
   }
@@ -94,7 +101,7 @@ function drawAnimation(sequence, nodeCoords, bestPath, drawSpeed) {
  */
 function drawSegment(nodeID, edgeID, nodeCoords, color) {
   var path = [createGLL(nodeCoords[nodeID]), createGLL(nodeCoords[edgeID])];
-  var polyline = createPolyline(path, "rgba(255,0,0,1)", 1, true);
+  var polyline = createPolyline(path, color, 2);
   polyline.setMap(map);
   plines.list.push(polyline);
   if (edgeID in predList) {
@@ -112,7 +119,7 @@ function drawBestPath(path) {
   for (var i = 0; i < path.length; ++i) {
     googleLLPath.push(createGLL(path[i]));
   }
-  var polyline = createPolyline(googleLLPath, "rgba(0,0,0,.95)", 2, true);
+  var polyline = createPolyline(googleLLPath, "#000", 2, 100);
   polyline.setMap(map);
   plines.list.push(polyline);
 }
@@ -157,13 +164,12 @@ function resetMap() {
   predList = {};
 }
 
-function createPolyline(path, color, size, visible) {
+function createPolyline(path, color, size, zIndex) {
   return new google.maps.Polyline({
     path: path,
     strokeColor: color,
-    strokeOpacity: .7,
     strokeWeight: size, 
-    visible: visible
+    zIndex: zIndex 
   });
 }
 
