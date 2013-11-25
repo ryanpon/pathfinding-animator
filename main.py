@@ -61,6 +61,10 @@ def search_animation():
 def animate():
     return open("static/gmaps.html", "r").read()
 
+@app.route("/about")
+def index():
+    return open("static/about.html", "r").read()
+
 @app.route("/")
 def index():
     return open("static/index.html", "r").read()
