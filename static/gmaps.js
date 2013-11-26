@@ -209,7 +209,8 @@ function initHelp() {
   });
 
   var optionText = "The 'Bidirectional' toggle controls whether or not the search is   \
-            performed from both the origin and destination simultaneously.     \
+            performed from both the origin and destination simultaneously. Note that my  \
+            current bidirectional algorithms don't have optimal bounds on the path length. /
             <br><br> \
             Heuristic weight multiplies the A* and ALT heuristics by a constant\
             factor, epsilon. Although this may cause routing to scan fewer     \
