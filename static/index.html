@@ -19,11 +19,11 @@
       body {
         height: 100%;
         background: white;
-        background-image: -webkit-linear-gradient(top, #C9DBE9 0%, white 100%);
-        background-image: -moz-linear-gradient(top, #C9DBE9 0%, white 100%);
-        background-image: -o-linear-gradient(top, #C9DBE9 0%, white 100%);
-        background-image: -ms-linear-gradient(top, #C9DBE9 0%, white 100%);
-        background-image: linear-gradient(top, #C9DBE9 0%, white 100%);
+        background-image: -webkit-linear-gradient(top, #89C2EE 0%, white 100%);
+        background-image: -moz-linear-gradient(top, #89C2EE 0%, white 100%);
+        background-image: -o-linear-gradient(top, #89C2EE 0%, white 100%);
+        background-image: -ms-linear-gradient(top, #89C2EE 0%, white 100%);
+        background-image: linear-gradient(top, #89C2EE 0%, white 100%);
         overflow: hidden;
       }
       .center {
@@ -43,21 +43,21 @@
       .big-cloud {
         top: 200px;
         opacity: .9;
-        -webkit-animation: moveclouds 25s linear infinite;
-        -moz-animation: moveclouds 25s linear infinite;
-        -ms-animation: moveclouds 25s linear infinite;
-        -o-animation: moveclouds 25s linear infinite;
-        animation: moveclouds 25s linear infinite;
-      }
-      .little-cloud {
-        top: 50px;
-        font-size: 5px;    
-        opacity: .8;
         -webkit-animation: moveclouds 20s linear infinite;
         -moz-animation: moveclouds 20s linear infinite;
         -ms-animation: moveclouds 20s linear infinite;
         -o-animation: moveclouds 20s linear infinite;
         animation: moveclouds 20s linear infinite;
+      }
+      .little-cloud {
+        top: 50px;
+        font-size: 5px;    
+        opacity: .6;
+        -webkit-animation: reversemoveclouds 22s linear infinite;
+        -moz-animation: reversemoveclouds 22s linear infinite;
+        -ms-animation: reversemoveclouds 22s linear infinite;
+        -o-animation: reversemoveclouds 22s linear infinite;
+        animation: reversemoveclouds 22s linear infinite;
 
       }
       .cloud:after {
@@ -74,50 +74,50 @@
       }
       
       @-webkit-keyframes moveclouds {
-        0% {margin-left: 150%;}
+        0% {margin-left: 115%;}
         100% {margin-left: -150%;}
       }
       @-webkit-keyframes reversemoveclouds {
-        0% {margin-left: -100%;}
-        100% {margin-left: 100%;}
+        0% {margin-left: -35%;}
+        100% {margin-left: 110%;}
       }
 
       @-moz-keyframes moveclouds {
-        0% {margin-left: 150%;}
+        0% {margin-left: 115%;}
         100% {margin-left: -150%;}
       }
       @-moz-keyframes reversemoveclouds {
-        0% {margin-left: -100%;}
-        100% {margin-left: 100%;}
+        0% {margin-left: -35%;}
+        100% {margin-left: 110%;}
       }
 
       @-ms-keyframes moveclouds {
-        0% {margin-left: 150%;}
+        0% {margin-left: 115%;}
         100% {margin-left: -150%;}
       }
       @-ms-keyframes reversemoveclouds {
-        0% {margin-left: -100%;}
-        100% {margin-left: 100%;}
+        0% {margin-left: -35%;}
+        100% {margin-left: 110%;}
       }
 
       @-o-keyframes moveclouds {
-        0% {margin-left: 150%;}
+        0% {margin-left: 115%;}
         100% {margin-left: -150%;}
       }
       @-o-keyframes reversemoveclouds {
-        0% {margin-left: -100%;}
-        100% {margin-left: 100%;}
+        0% {margin-left: -35%;}
+        100% {margin-left: 110%;}
       }
 
       @keyframes moveclouds {
-        0% {margin-left: 150%;}
+        0% {margin-left: 115%;}
         100% {margin-left: -150%;}
       }
       @keyframes reversemoveclouds {
-        0% {margin-left: -100%;}
-        100% {margin-left: 100%;}
+        0% {margin-left: -35%;}
+        100% {margin-left: 110%;}
       }
-      
+
     </style>
   </head>
 
