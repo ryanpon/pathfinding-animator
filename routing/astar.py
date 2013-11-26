@@ -58,16 +58,3 @@ class AStarAnimator(GraphSearchAnimator):
                 pred_list[arc] = {'pred' : vert, 'dist' : new_dist}
                 est = new_dist + h(arc)
                 heappush(unseen, (est, arc))
-
-    def _alt_heuristic(self, id1, id2):
-        max_dist = float("-inf")
-        lm_dists = self.landmark_dict
-        for dist1, dist2 in zip(lm_dists[id1], lm_dists[id2]):
-            try:
-                d = abs(dist1 - dist2)
-                if d > max_dist:
-                    max_dist = d
-            except TypeError:
-                # Some nodes couldnt reach a landmark
-                pass
-        return max_dist

@@ -97,13 +97,3 @@ class BidirectionalAStarAnimator(GraphSearchAnimator):
             rev_path.append(vertex)
             vertex = rev_preds[vertex]['pred']
         return [self.util.coords[v] for v in (fwd_path + rev_path + [dest])]
-
-    def _alt_heuristic(self, id1, id2):
-        max_dist = float("-inf")
-        lm_dists = self.landmark_dict
-        for dist1, dist2 in zip(lm_dists[id1], lm_dists[id2]):
-            d = abs(dist1 - dist2)
-            if d > max_dist:
-                max_dist = d
-        return max_dist
-

@@ -67,3 +67,16 @@ class GraphSearchAnimator(object):
         elif heuristic == "octile":
             h_fun = self.util._octile
         return h_fun            
+
+    def _alt_heuristic(self, id1, id2):
+        max_dist = 0
+        lm_dists = self.landmark_dict
+        for dist1, dist2 in zip(lm_dists[id1], lm_dists[id2]):
+            try:
+                d = abs(dist1 - dist2)
+                if d > max_dist:
+                    max_dist = d
+            except TypeError:
+                # Some nodes couldnt reach a landmark
+                pass
+        return max_dist
