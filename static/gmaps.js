@@ -248,7 +248,6 @@ function initializeMap() {
   var mapOptions = {
     center: createGLL(CENTER),
     zoom: 15,
-    minZoom: 15,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     disableDefaultUI: true
   };
