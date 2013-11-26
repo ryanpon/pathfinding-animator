@@ -17,6 +17,12 @@ class GraphSearchAnimator(object):
         self.graph = graph
         self.util = GraphUtil(vertex_coords)
 
+    def _astar(self, source, dest, h):
+        """
+        Implemented by objects that inherit from this.
+        """
+        pass
+
     def _animation(self, source, dest, heuristic):
         seq, pred_list = self._astar(source, dest, heuristic)
         return self._process_search_result(seq, pred_list, dest)

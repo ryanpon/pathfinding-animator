@@ -74,13 +74,7 @@ function drawAnimation(sequence, nodeCoords, bestPath, drawSpeed) {
         var color = "rgba(255," + 2 * ~~(255 - 255 * i / seqLen) + ",0,1)";
       }
       // var color = "rgba(255, 0, 0, .8)";
-      (function (node, edge, color) {
-        plines.timeouts.push(setTimeout(function ()  {
-          if (animationID === curAnimationID) {
-            drawSegment(node, edge, nodeCoords, color);
-          }
-        }, curWait));
-      })(node ,edges[k], color);
+      delayedDrawSegment(node, edges[k], nodeCoords, animationID, color, curWait);
       curWait += drawSpeed;
     }
   }
@@ -89,6 +83,19 @@ function drawAnimation(sequence, nodeCoords, bestPath, drawSpeed) {
       drawBestPath(bestPath);
     }
   }, curWait));
+}
+
+function delayedDrawSegment(node, edge, nodeCoords, animationID, color, delay) {
+  var draw = function ()  {
+    if (animationID === curAnimationID) {
+      drawSegment(node, edge, nodeCoords, color);
+    }
+  };
+  if (delay > 0) {
+    plines.timeouts.push(setTimeout(draw, delay));
+  } else {
+    draw();
+  }
 }
 
 /*
@@ -210,7 +217,7 @@ function initHelp() {
 
   var optionText = "The 'Bidirectional' toggle controls whether or not the search is   \
             performed from both the origin and destination simultaneously. Note that my  \
-            current bidirectional algorithms don't have optimal bounds on the path length. /
+            current bidirectional algorithms don't have optimal bounds on the path length. \
             <br><br> \
             Heuristic weight multiplies the A* and ALT heuristics by a constant\
             factor, epsilon. Although this may cause routing to scan fewer     \
