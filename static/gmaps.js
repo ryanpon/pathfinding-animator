@@ -267,7 +267,9 @@ function initializeMap() {
   setMarkers(DEFAULT_SOURCE, DEFAULT_DEST);
 
   // run a demonstration graph search
-  startAnimation(15);
+  setTimeout(function () {
+    startAnimation(15);
+  }, 1000);
 }
 
 function uuid() {
