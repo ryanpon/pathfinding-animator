@@ -1,7 +1,7 @@
 
 html, body {
   width: 100%;
-  min-height: 570px;
+  min-height: 585px;
   text-rendering: optimizeLegibility;
 }
 html, body, #map-canvas {
@@ -24,7 +24,6 @@ h6 {
 }
 #title {
   background-color: #E5E5E5 !important;
-  z-index: 3;
   margin: 0;
 }
 #title h3 {
@@ -35,6 +34,7 @@ h6 {
   float: right;
   max-width: none;
   max-height: none;
+  width: 100%;
   width: calc(100% - 240px);
   z-index: 1;
   display: block;
@@ -47,7 +47,8 @@ h6 {
 #options {
   float: left;
   height: 100%;
-  z-index: 2;
+  position: relative;
+  z-index: 4;
   width: 240px;
   background-color: #FAFAFA;
   padding: 6px; 
@@ -63,7 +64,7 @@ h6 {
   position: absolute;
   left: 265px;
   top: 20px;
-  z-index: 3;
+  z-index: 2;
   max-width: 500px;
 }
 
@@ -109,3 +110,54 @@ h6 {
   width: 240px;
   font-weight: 400;
 }
+
+.contact {
+  text-align: center;
+  margin-top: 5px;
+}
+.contact a {
+  font-size: 16px;
+}
+
+.map-loading-overlay {
+  height: 100%;
+  width: 100%;
+  width: calc(100% - 240px);
+  margin-left: 240px;
+  position: fixed;
+  z-index: 3;
+  display: none;
+  background-color: rgba(0,0,0,.5);
+}
+.spinner {
+  height: 200px;
+  width: 200px;
+  position: relative;
+  top: calc(50% - 100px);
+  margin: 0 auto;
+  border-top: 4px solid rgb(66, 139, 202);
+  border-radius: 100%;
+  
+  -webkit-animation: rotation .7s infinite linear;
+  -moz-animation: rotation .7s infinite linear;
+  -o-animation: rotation .7s infinite linear;
+  animation: rotation .7s infinite linear;
+}
+
+@-webkit-keyframes rotation {
+  from {-webkit-transform: rotate(0deg);}
+  to {-webkit-transform: rotate(359deg);}
+}
+@-moz-keyframes rotation {
+  from {-moz-transform: rotate(0deg);}
+  to {-moz-transform: rotate(359deg);}
+}
+@-o-keyframes rotation {
+  from {-o-transform: rotate(0deg);}
+  to {-o-transform: rotate(359deg);}
+}
+@keyframes rotation {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(359deg);}
+}
+
