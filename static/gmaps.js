@@ -45,7 +45,7 @@ function startAnimation() {
       console.log(a,b,c);
     })
     .always(function () {
-      $('#go-button').button('reset');
+      loading.end();
     });
 }
 
@@ -192,13 +192,6 @@ function createGLL(p) {
   return new google.maps.LatLng(p[0], p[1]);
 }
 
-// function encodeQueryData(data) {
-//   var ret = [];
-//   for (var d in data)
-//       ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
-//   return ret.join("&");
-// }
-
 function initialize() {
   initButtons();
   initHelp();
@@ -248,8 +241,19 @@ function initButtons() {
   $("#go-button").click(function () {
     resetMap();
     startAnimation();
-    $(this).button('loading');
+    loading.start();
   });
+}
+
+var loading = {
+  start: function () {
+    $("#go-button").button('loading');
+    $(".map-loading-overlay").fadeIn(100);
+  },
+  end: function () {
+    $("#go-button").button('reset');
+    $(".map-loading-overlay").fadeOut(100); 
+  }
 }
 
 function initializeMap() {
