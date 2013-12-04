@@ -13,9 +13,9 @@ var plines = {
 };
 var map;               // google maps API map
 var drawSpeeds = {     // duration between rendering each segment in the graph search
-  "fast": 5,
-  "slow": 15,
-  "instant": 0
+  fast: 5,
+  slow: 15,
+  instant: 0
 }
 
 /*
@@ -261,6 +261,11 @@ function initializeMap() {
   };
   map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
   setMarkers(DEFAULT_SOURCE, DEFAULT_DEST);
+
+  // run a demonstration graph search
+  drawSpeeds.fast = 15;
+  startAnimation();
+  drawSpeeds.fast = 5;
 }
 
 function uuid() {
