@@ -21,7 +21,7 @@ var drawSpeeds = {     // duration between rendering each segment in the graph s
 /*
  * Initiate animation based on current settings
  */
-function startAnimation() {
+function startAnimation(drawSpeed) {
   var source = sMarker.getPosition();
   var dest = eMarker.getPosition();
   var data = {
@@ -39,7 +39,7 @@ function startAnimation() {
   })
     .done(function (d) { 
       console.log(d);
-      drawAnimation(d["sequence"], d["coords"], d["path"], getDrawSpeed());
+      drawAnimation(d["sequence"], d["coords"], d["path"], drawSpeed || getDrawSpeed());
     })
     .fail(function (a,b,c) {
       console.log(a,b,c);
@@ -267,9 +267,7 @@ function initializeMap() {
   setMarkers(DEFAULT_SOURCE, DEFAULT_DEST);
 
   // run a demonstration graph search
-  drawSpeeds.fast = 15;
-  startAnimation();
-  drawSpeeds.fast = 5;
+  startAnimation(15);
 }
 
 function uuid() {
