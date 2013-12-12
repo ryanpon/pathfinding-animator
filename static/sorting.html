@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html ng-app="sorting">
+
+  <head>
+    <title>Sort Visualizer</title>
+    <script data-require="angular.js@*" data-semver="1.2.4" src="http://code.angularjs.org/1.2.4/angular.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/assets/js/angular.js"></script>
+    <link rel="stylesheet" href="static/sorting.css">
+  </head>
+
+  <body ng-controller="MainCtrl"><div class="content">
+
+    <h2 class="main-title">
+      Sort Visualizer
+      <button class="btn btn-default reset" ng-click="global_reset()">Reset All</button>
+    </h2>
+
+    <div ng-controller="BubbleSortCtrl" class="sort-container">
+      <h4>
+       Bubble Sort 
+       <button class="btn btn-default reset" ng-click="restart()"><span class="glyphicon glyphicon-repeat"></span></button>
+      </h4>
+      <div class="sort" ng-class="{'done': sort.done}">
+        <i class="arrow" yn-top="sort.inner * 25 + 10"></i>
+        <i class="arrow" yn-top="sort.inner * 25 + 35"></i>
+        <div class="sort-item" 
+             ng-repeat="item in sort.viewList track by $index"
+             yn-width="item.val * 20" yn-top="item.index * 25">
+          {{item.val}}
+        </div>
+      </div>    
+    </div>
+    
+    <div ng-controller="InsertionSortCtrl" class="sort-container insertion-sort">
+      <h4>
+       Insertion Sort 
+       <button class="btn btn-default reset" ng-click="restart()"><span class="glyphicon glyphicon-repeat"></span></button>
+      </h4>
+      <div class="sort" ng-class="{'done': sort.done}">
+        <i class="arrow" yn-top="(sort.inc - 1) * 25 + 10"></i>
+        <i class="arrow" yn-top="(sort.hole - 1) * 25 + 35"></i>
+        <div class="sort-item" 
+            ng-class="{'is-hole': item.hole}"
+             ng-repeat="item in sort.viewList track by $index"
+             yn-width="item.val * 20" yn-top="item.index * 25">
+          {{item.val}}
+        </div>
+      </div>    
+    </div>
+
+    <div ng-controller="SelectionSortCtrl" class="sort-container">
+      <h4>
+       Selection Sort 
+       <button class="btn btn-default reset" ng-click="restart()"><span class="glyphicon glyphicon-repeat"></span></button>
+      </h4>
+      <div class="sort" ng-class="{'done': sort.done}">
+        <i class="arrow" yn-top="sort.inner * 25 + 10"></i>
+        <i class="arrow" yn-top="sort.outer * 25 + 10"></i>
+        <div class="sort-item" 
+             ng-class="{'min-item': item.index === sort.min, 'sort-complete': item.index < sort.outer}"
+             ng-repeat="item in sort.viewList track by $index"
+             yn-width="item.val * 20" yn-top="item.index * 25">
+          {{item.val}}
+        </div>
+      </div>    
+    </div>  
+
+    <div>
+      <div ng-controller="MergeSortCtrl" class="sort-container merge-sort">
+        <h4>
+         Merge Sort 
+         <button class="btn btn-default reset" ng-click="restart()"><span class="glyphicon glyphicon-repeat"></span></button>
+        </h4>
+        <div class="sort" ng-class="{'done': sort.done}">
+          <div class="sort-item" 
+               ng-repeat="item in sort.viewList track by $index"
+               yn-top="item.level * 28" 
+               yn-left="item.index * 25 + item.sublist * 10 - pow(2, item.level) * 5 + 53">
+            {{item.val}}
+          </div>
+        </div>    
+      </div> 
+
+    </div>
+   
+
+    <script src="static/sorting.js"></script>
+
+  </div></body>
+
+</html>

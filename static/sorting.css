@@ -1,0 +1,103 @@
+
+body {
+  min-width: 900px;
+}
+.content {
+  margin: 0 auto;
+  width: 890px;
+}
+.main-title {
+  border-bottom: 2px solid #eeeeee;
+}
+.main-title .btn {
+  float: right;
+  position: relative;
+  bottom: 5px;
+}
+
+.sort-container {
+  display: inline-block;
+  padding: .5em 1.5em 1.5em;
+  /*border: 1px solid #eeeeee;*/
+  border-radius: 4px;
+  text-align: center;
+}
+
+.sort-container h4 {
+  color: #333;
+  line-height: 100%;
+  /*margin: 0em .2em .5em;*/
+}
+.sort-container h4 .btn {
+  border: 0;
+}
+
+.sort {
+  position: relative;
+  height: 258px;
+  width: 230px;
+  border: 2px solid #dddddd;
+  border-radius: 3px;
+  background: #eeeeee;
+}
+.sort-item {
+  position: absolute;
+  line-height: 16px;
+  margin: 5px;
+  border: 2px solid #9ABDCE;
+  border-radius: 2px;
+  background: #CBDDE6;
+  color: white;
+  vertical-align: bottom;
+  
+  -webkit-transition: 1s all ease;
+  -moz-transition: 1s all ease;
+  -o-transition: 1s all ease;
+  transition: 1s all ease;
+}
+.sort-item.is-hole { 
+  width: 50px !important;
+  line-height: 40px !important;
+  left: 225px !important;
+  top: 1px !important;
+}
+
+.min-item {
+  background: rgb(230, 203, 203);
+  border-color: rgb(206, 154, 154);
+}
+.done .sort-item, .sort-complete {
+  background: #CBE6D0;
+  border-color: #A6CE9A;
+}
+
+.insertion-sort .sort {
+  width: 290px;
+}
+
+.merge-sort {
+  margin-left: calc(50% - 178px);
+}
+.merge-sort .sort {
+  height: 122px;
+  width: 313px;
+}
+.merge-sort .sort-item {
+  width: 27px;
+  line-height: 20px;
+  padding: 0;
+}
+
+.arrow {
+  position: absolute;
+  left: 210px;
+  border-right: 10px solid #666666;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  
+  -webkit-transition: 1s all ease;
+  -moz-transition: 1s all ease;
+  -o-transition: 1s all ease;
+  transition: 1s all ease;
+}
+

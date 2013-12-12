@@ -49,13 +49,17 @@ def search_animation():
         seq, coords, path = animator.astar_animation(source, dest, heuristic, epsilon)
     elif search_type == "alt":
         seq, coords, path = animator.alt_animation(source, dest, epsilon)
+    
     data = {
         "sequence" : seq,
         "coords" : coords,
         "path" : path
     }
-
     return make_response(json.dumps(data))
+
+@app.route("/sorting")
+def sorting():
+    return open("static/sorting.html", "r").read()
 
 @app.route("/animate")
 def animate():
