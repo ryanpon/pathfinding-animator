@@ -1,6 +1,7 @@
 
 body {
   min-width: 900px;
+  background: white;
 }
 .content {
   margin: 0 auto;
