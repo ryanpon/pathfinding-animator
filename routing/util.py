@@ -53,3 +53,13 @@ def bearing_angle(brng1, brng2):
         if result > 180:
             result = abs(result - 360)
         return result
+
+def path_len(coords_list):
+    """Given a list of (lat,lng) tuples, returns the length in km"""
+    if not len(coords_list): return 0
+    length = 0
+    prev_lat, prev_lng = coords_list[0]
+    for lat,lng in coords_list:
+        length += haversine(prev_lat, prev_lng, lat, lng)
+        prev_lat, prev_lng = lat, lng
+    return length

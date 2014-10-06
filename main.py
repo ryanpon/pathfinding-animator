@@ -1,17 +1,17 @@
 
-import os 
-import sys
+import os, sys, json
 from flask import Flask, make_response, request
 from flask.ext.gzip import Gzip
-import json
+from time import time
 
 app = Flask(__name__)
 gzip = Gzip(app, compress_level=9)
 if "test" in sys.argv:
     app.debug = True
-sys.path.append("routing/")
-from astar import AStarAnimator
-from bidirectional import BidirectionalAStarAnimator
+# sys.path.append("routing/")
+from routing.astar import AStarAnimator
+from routing.bidirectional import BidirectionalAStarAnimator
+from routing.util import path_len
 
 with open("routing/graph_data/sf.j") as fp:
     graph = json.loads(fp.read())
@@ -40,6 +40,7 @@ def search_animation():
         epsilon = 1
     heuristic = request.args.get("heuristic", "manhattan")
 
+    start = time()
     animator = ANIMATOR
     if request.args.get("bidirectional") == "true":
         animator = BIDIRECTION
@@ -53,7 +54,13 @@ def search_animation():
     data = {
         "sequence" : seq,
         "coords" : coords,
-        "path" : path
+        "path" : path,
+        "meta": {
+          "elapsed_ms": round((time() - start) * 1000),
+          "closed_set_len": len(coords),
+          "path_len_nodes": len(path),
+          "path_len_km": path_len(path)
+        }
     }
     return make_response(json.dumps(data))
 
