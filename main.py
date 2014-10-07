@@ -50,7 +50,7 @@ def search_animation():
         seq, coords, path = animator.astar_animation(source, dest, heuristic, epsilon)
     elif search_type == "alt":
         seq, coords, path = animator.alt_animation(source, dest, epsilon)
-    
+
     data = {
         "sequence" : seq,
         "coords" : coords,
@@ -73,7 +73,7 @@ def animate():
     return open("static/gmaps.html", "r").read()
 
 @app.route("/about")
-def index():
+def about():
     return open("static/about.html", "r").read()
 
 @app.route("/")
