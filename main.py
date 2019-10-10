@@ -1,7 +1,7 @@
 
 import os, sys, json
 from flask import Flask, make_response, request
-from flask.ext.gzip import Gzip
+from flask_gzip import Gzip
 from time import time
 
 app = Flask(__name__)
@@ -64,10 +64,6 @@ def search_animation():
     }
     return make_response(json.dumps(data))
 
-@app.route("/sorting")
-def sorting():
-    return open("static/sorting.html", "r").read()
-
 @app.route("/animate")
 def animate():
     return open("static/gmaps.html", "r").read()
@@ -79,12 +75,6 @@ def about():
 @app.route("/")
 def index():
     return open("static/index.html", "r").read()
-
-@app.route("/static/resume.pdf")
-def get_resume():
-    response = make_response(open("static/resume.pdf", "r").read())
-    response.headers["Content-Type"] = "application/pdf"
-    return response
 
 def split_comma_ll(ll_string):
     s = ll_string.split(",")
